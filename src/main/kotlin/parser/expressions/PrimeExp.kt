@@ -1,16 +1,20 @@
 package parser.expressions
 
+import lexer.SemanticValue
 import lexer.Token
 
-class PrimeExp(`var`: Token) : Expression {
-    var name: String?
-    var value = 0
+class PrimeExp(token : Token) : Expression {
+    var line: Int
+    var name: String
+    var value: SemanticValue
 
     init {
-        name = `var`.name
+        this.line = token.line
+        this.name = token.name
+        this.value = token.value
     }
 
-    override fun <K> accept(visitor: Visitor<K>): K {
+    override fun <T> accept(visitor: ExpVisitor<T>): T {
         return visitor.visitPrimeExp(this)
     }
 }

@@ -2,18 +2,16 @@ package parser.expressions
 
 import lexer.Token
 
-class BinExp(left: Expression, operator: Token, right: Expression) : Expression {
-    var left: Expression
+class BinExp(var left: Expression, operator: Token, right: Expression) : Expression {
     var operator: Token
     var right: Expression
 
     init {
-        this.left = left
         this.right = right
         this.operator = operator
     }
 
-    override fun <K> accept(visitor: Visitor<K>): K {
+    override fun <T> accept(visitor: ExpVisitor<T>): T {
         return visitor.visitBinExp(this)
     }
 }

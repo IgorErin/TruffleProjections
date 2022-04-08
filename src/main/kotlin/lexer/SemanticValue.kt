@@ -17,7 +17,7 @@ enum class SemanticValue {
     MINUS,
     PLUS,
     ASTER,
-    LABLE,
+    LABEL,
     END,
     INT,
     VAR,

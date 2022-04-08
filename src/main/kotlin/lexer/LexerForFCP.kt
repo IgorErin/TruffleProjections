@@ -157,7 +157,7 @@ class LexerForFCP(stringOfCode: String?) {
             if (index > 0 && listOfTokens[index].value == SemanticValue.COLON) {
                 listOfTokens.removeAt(index)
                 name = listOfTokens.removeAt(index - 1).name
-                listOfTokens.add(index - 1, Token(SemanticValue.LABLE, name, line))
+                listOfTokens.add(index - 1, Token(SemanticValue.LABEL, name, line))
             }
         }
     }

@@ -2,10 +2,11 @@ package parser
 
 import lexer.SemanticValue.*
 import parser.expressions.*
+import parser.statements.*
 
-class Evaluater : Visitor<Int> {
-    fun eval(exp: Expression): Int {
-        return exp.accept(this)
+class Evaluater : ExpVisitor<Int>, StmtVisitor<Unit> {
+    fun eval(stmt: Statement) {
+        stmt.accept(this)
     }
 
     override fun visitBinExp(exp: BinExp): Int {
@@ -15,7 +16,7 @@ class Evaluater : Visitor<Int> {
                     return 1
                 }
 
-                return 0;
+                return 0
             }
             PLUS -> {
                 return exp.left.accept(this) + exp.right.accept(this)
@@ -28,28 +29,28 @@ class Evaluater : Visitor<Int> {
             }
             GT -> {
                 return if (exp.left.accept(this) > exp.right.accept(this)) {
-                    1;
+                    1
                 } else {
                     0
                 }
             }
             LT -> {
                 return if (exp.left.accept(this) < exp.right.accept(this)) {
-                    1;
+                    1
                 } else {
                     0
                 }
             }
             GOEQ -> {
                 return if (exp.left.accept(this) >= exp.right.accept(this)) {
-                    1;
+                    1
                 } else {
                     0
                 }
             }
             LOEQ -> {
                 return if (exp.left.accept(this) <= exp.right.accept(this)) {
-                    1;
+                    1
                 } else {
                     0
                 }
@@ -77,5 +78,29 @@ class Evaluater : Visitor<Int> {
 
         //TODO(for variable)
         throw ParserException(exp.name, exp.line)
+    }
+
+    override fun visitExpStatement(stmt: ExpStatement): Unit {
+        stmt.exp.accept(this)
+    }
+
+    override fun visitReturnStatement(stmt: ReturnStatement): Unit {
+        println(stmt.exp.accept(this))
+    }
+
+    override fun visitJumpStatement(exp: JumpStatement) {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitIfStatement(exp: IfStatement) {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitVarStatement(exp: VarStatement) {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitVarStatement(exp: AssignStatement) {
+        TODO("Not yet implemented")
     }
 }

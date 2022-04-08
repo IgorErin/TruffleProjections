@@ -1,4 +1,5 @@
 package parser.statements
 
-class Statement {
+interface Statement {
+    fun <T> accept(visitor: StmtVisitor<T>): T
 }
