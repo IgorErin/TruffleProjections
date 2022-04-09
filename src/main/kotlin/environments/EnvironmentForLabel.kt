@@ -1,0 +1,4 @@
+package environments
+
+class EnvironmentForLabel {
+}
