@@ -3,30 +3,26 @@ import lexer.Token
 import parser.Evaluater
 import parser.Parser
 
+// read x, y; 1: if x == y goto 7 else 2 2: if x < y goto 5 else 3 3: x := x - y goto 1 5: y := y - x goto 1 7: return x
+
 fun main() {
-    run("1 + 2 * 3 + 1 + 4 - 2")
+    run("read x, y; 1: if x == y goto 7 else 2 2: if x < y goto 5 else 3 3: x := x - y goto 1 5: y := y - x goto 1 7: return x")
 }
 
 fun run(stringOfCode: String) {
-    /*val lexer = LexerForFCP(" 1 + 2 * 3 + 1 + 4 - 2")
+    val lexer = LexerForFCP(stringOfCode)
     lexer.parseString()
     val tokens: List<Token> = lexer.listOfTokens
-    print("tokens: ")
-    for (i in tokens) {
-        print(i.name)
-        print(" ")
-    }
+
     val parser = Parser(tokens)
-    val exp = parser.parse()
-    val printer = Evaluater()
-    println(printer.eval(exp))*/
-}
+    parser.read()
+    println(parser.listOfVariables)
+    println(parser.listOfLabels)
 
-fun error(string: Int, message: String) {
-    report(string, "", message)
-}
+    for (i in lexer.listOfTokens) {
+        println("${i.name} ${i.value}")
+    }
 
-fun report(string: Int, where: String, massage: String) {
-    println("Error occurred in " + string + "line, in" + where + ": " + massage)
-    val hadError = true
+    val eval = Evaluater(parser.mapOfBlocks, parser.listOfLabels, parser.listOfVariables)
+    eval.eval()
 }

@@ -1,12 +1,36 @@
 package parser
 
+import exceptions.ParserException
+import environments.EnvironmentForVar
+import exceptions.EvalException
 import lexer.SemanticValue.*
 import parser.expressions.*
 import parser.statements.*
 
-class Evaluater : ExpVisitor<Int>, StmtVisitor<Unit> {
-    fun eval(stmt: Statement) {
-        stmt.accept(this)
+class Evaluater(private val mapOfBlocks: Map<String, List<Statement>>,
+                private val listOfLabels: List<String>,
+                private val listOfVar: List<String>
+                ) : ExpVisitor<Int>, StmtVisitor<Unit> {
+    private val environment = EnvironmentForVar()
+    private var numberOfCurrentLabel = 0
+    private var returnFlag = false
+
+    fun eval() {
+
+        for (name in listOfVar) {
+            environment.assign(name, readLine()?.toIntOrNull() ?: 0)
+        }
+
+        while (numberOfCurrentLabel in listOfLabels.indices && !returnFlag) {
+            evalLabel()
+            numberOfCurrentLabel++
+        }
+    }
+
+    private fun evalLabel() {
+        for (stmt in mapOfBlocks[listOfLabels[numberOfCurrentLabel]] ?: throw IndexOutOfBoundsException()) { //TODO(implement)
+            stmt.accept(this)
+        }
     }
 
     override fun visitBinExp(exp: BinExp): Int {
@@ -72,35 +96,39 @@ class Evaluater : ExpVisitor<Int>, StmtVisitor<Unit> {
     }
 
     override fun visitPrimeExp(exp: PrimeExp): Int {
-        if (exp.value == INT) {
-            return exp.name.toInt()
+        return when (exp.value) {
+            INT -> exp.name.toInt()
+            VAR -> environment.get(exp.name) ?: throw EvalException("var is not bound", exp.name, exp.line)
+            else -> throw ParserException(exp.name, exp.line)
         }
-
-        //TODO(for variable)
-        throw ParserException(exp.name, exp.line)
     }
 
-    override fun visitExpStatement(stmt: ExpStatement): Unit {
+    override fun visitExpStatement(stmt: ExpStatement) {
         stmt.exp.accept(this)
     }
 
-    override fun visitReturnStatement(stmt: ReturnStatement): Unit {
+    override fun visitReturnStatement(stmt: ReturnStatement) {
         println(stmt.exp.accept(this))
+        returnFlag = true
     }
 
-    override fun visitJumpStatement(exp: JumpStatement) {
-        TODO("Not yet implemented")
+    override fun visitJumpStatement(stmt: JumpStatement) {
+        if (stmt.name in listOfLabels) {
+            numberOfCurrentLabel = listOfLabels.indexOf(stmt.name) - 1
+            return
+        }
+
+        throw EvalException("label is node bound", stmt.name, stmt.line)
     }
 
-    override fun visitIfStatement(exp: IfStatement) {
-        TODO("Not yet implemented")
+    override fun visitIfStatement(stmt: IfStatement) {
+        when (stmt.exp.accept(this)) {
+            0 -> stmt.secondJumpLabel.accept(this)
+            else -> stmt.firstJumpLabel.accept(this)
+        }
     }
 
-    override fun visitVarStatement(exp: VarStatement) {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitVarStatement(exp: AssignStatement) {
-        TODO("Not yet implemented")
+    override fun visitAssignStatement(stmt: AssignStatement) {
+        environment.assign(stmt.nameOfVariable, stmt.exp.accept(this))
     }
 }

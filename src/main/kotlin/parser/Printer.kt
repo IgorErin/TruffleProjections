@@ -3,10 +3,12 @@ package parser
 import java.lang.StringBuilder
 import lexer.Token
 import parser.expressions.*
+import parser.statements.*
 
-class Printer : Visitor<String?> {
-    fun print(exp: Expression?): String {
-        return exp?.accept(this) ?: "null"
+class Printer : ExpVisitor<String>, StmtVisitor<String?> {
+
+    fun print(stmt: Statement?): String {
+        return stmt?.accept(this) ?: "null"
     }
 
     override fun visitBinExp(exp: BinExp): String {
@@ -17,7 +19,7 @@ class Printer : Visitor<String?> {
         return printNested(exp.operator, exp.right)
     }
 
-    override fun visitPrimeExp(exp: PrimeExp): String? {
+    override fun visitPrimeExp(exp: PrimeExp): String {
         return exp.name
     }
 
@@ -29,5 +31,29 @@ class Printer : Visitor<String?> {
         }
         string.append("))")
         return string.toString()
+    }
+
+    override fun visitExpStatement(stmt: ExpStatement): String {
+        return stmt.exp.accept(this)
+    }
+
+    override fun visitReturnStatement(stmt: ReturnStatement): String {
+        return "return ${stmt.exp.accept(this)}"
+    }
+
+    override fun visitJumpStatement(stmt: JumpStatement): String {
+        return "jump to ${stmt.name}"
+    }
+
+    override fun visitIfStatement(stmt: IfStatement): String {
+        return "if ${stmt.exp.accept(this)} ${stmt.firstJumpLabel.name} else ${stmt.firstJumpLabel.name}"
+    }
+
+    /*override fun visitVarStatement(stmt: VarStatement): String {
+        return stmt.name
+    }*/
+
+    override fun visitAssignStatement(stmt: AssignStatement): String {
+        return "${stmt.nameOfVariable} = ${stmt.exp.accept(this)}"
     }
 }

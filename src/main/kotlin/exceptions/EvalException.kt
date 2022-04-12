@@ -1,4 +1,3 @@
 package exceptions
 
-class EvalException {
-}
+class EvalException(message: String, name: String, line: Int) : Exception("$message invalid value '$name' in $line ")

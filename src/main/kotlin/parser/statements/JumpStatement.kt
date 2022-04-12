@@ -1,8 +1,6 @@
 package parser.statements
 
-import parser.expressions.Expression
-
-class JumpStatement(val exp: Expression) : Statement {
+class JumpStatement(val name: String, val line: Int) : Statement {
     override fun <T> accept(visitor: StmtVisitor<T>): T {
         return visitor.visitJumpStatement(this)
     }
