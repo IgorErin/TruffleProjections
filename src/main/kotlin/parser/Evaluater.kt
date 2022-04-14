@@ -12,23 +12,18 @@ class Evaluater(private val mapOfBlocks: Map<String, List<Statement>>,
                 private val listOfVar: List<String>
                 ) : ExpVisitor<Int>, StmtVisitor<Unit> {
     private val environment = EnvironmentForVar()
-    private var numberOfCurrentLabel = 0
     private var returnFlag = false
 
     fun eval() {
-
         for (name in listOfVar) {
             environment.assign(name, readLine()?.toIntOrNull() ?: 0)
         }
 
-        while (numberOfCurrentLabel in listOfLabels.indices && !returnFlag) {
-            evalLabel()
-            numberOfCurrentLabel++
-        }
+        evalLabel(listOfLabels[0])
     }
 
-    private fun evalLabel() {
-        for (stmt in mapOfBlocks[listOfLabels[numberOfCurrentLabel]] ?: throw IndexOutOfBoundsException()) { //TODO(implement)
+    private fun evalLabel(name: String) {
+        for (stmt in mapOfBlocks[name] ?: throw IndexOutOfBoundsException()) {
             stmt.accept(this)
         }
     }
@@ -114,7 +109,7 @@ class Evaluater(private val mapOfBlocks: Map<String, List<Statement>>,
 
     override fun visitJumpStatement(stmt: JumpStatement) {
         if (stmt.name in listOfLabels) {
-            numberOfCurrentLabel = listOfLabels.indexOf(stmt.name) - 1
+            evalLabel(stmt.name)
             return
         }
 
