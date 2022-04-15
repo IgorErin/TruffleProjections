@@ -7,12 +7,12 @@ import lexer.SemanticValue.*
 import parser.expressions.*
 import parser.statements.*
 
-class Evaluater(private val mapOfBlocks: Map<String, List<Statement>>,
-                private val listOfLabels: List<String>,
-                private val listOfVar: List<String>
-                ) : ExpVisitor<Int>, StmtVisitor<Unit> {
+class Evaluater(parser: Parser) : ExpVisitor<Int>, StmtVisitor<Unit> {
+    private val mapOfBlocks = parser.mapOfBlocks
+    private val listOfLabels = parser.listOfLabels
+    private val listOfVar = parser.listOfVariables
+
     private val environment = EnvironmentForVar()
-    private var returnFlag = false
 
     fun eval() {
         for (name in listOfVar) {
@@ -104,7 +104,6 @@ class Evaluater(private val mapOfBlocks: Map<String, List<Statement>>,
 
     override fun visitReturnStatement(stmt: ReturnStatement) {
         println(stmt.exp.accept(this))
-        returnFlag = true
     }
 
     override fun visitJumpStatement(stmt: JumpStatement) {
