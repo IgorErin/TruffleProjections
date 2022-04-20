@@ -7,4 +7,8 @@ class AssignStatement(val nameOfVariable: String, @Child val exp: Expression) : 
     override fun <T> accept(visitor: StmtVisitor<T>): T {
         return visitor.visitAssignStatement(this)
     }
+
+    override fun execute(args: IntArray): Int {
+        TODO()
+    }
 }

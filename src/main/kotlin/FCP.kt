@@ -4,12 +4,17 @@ import parser.Evaluater
 import parser.Parser
 import java.io.File
 import java.io.BufferedReader
-import java.security.CodeSource
 
 // read x, y; 1: if x == y goto 7 else 2 2: if x < y goto 5 else 3 3: x := x - y goto 1 5: y := y - x goto 1 7: return x
 
 fun main() {
-    run("read x, y; 1: if x == y goto 7 else 2 2: if x < y goto 5 else 3 3: x := x - y goto 1 5: y := y - x goto 1 7: return x")
+    for (i in 1..1000) {
+        val startTime = System.nanoTime()
+        run("0: x := 542 y := 143 goto 1 1: if x == y goto 7 else 2 2: if x < y goto 5 else 3 3: x := x - y goto 1 5: y := y - x goto 1 7: return x")
+        val totalTime = System.nanoTime() - startTime
+
+        println(totalTime)
+    }
 }
 
 fun run(source: String) {

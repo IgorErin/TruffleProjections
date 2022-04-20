@@ -6,6 +6,7 @@ import exceptions.EvalException
 import lexer.SemanticValue.*
 import parser.expressions.*
 import parser.statements.*
+import java.io.IOException
 
 class Evaluater(parser: Parser) : ExpVisitor<Int>, StmtVisitor<Unit> {
     private val mapOfBlocks = parser.mapOfBlocks
@@ -15,9 +16,13 @@ class Evaluater(parser: Parser) : ExpVisitor<Int>, StmtVisitor<Unit> {
     private val environment = EnvironmentForVar()
 
     fun eval() {
+        val list = mutableListOf<Int>()
         for (name in listOfVar) {
-            environment.assign(name, readLine()?.toIntOrNull() ?: 0)
+            val value = readLine()?.toIntOrNull() ?: throw IOException()
+            list.add(value)
+            environment.assign(name, value)
         }
+
 
         evalLabel(listOfLabels[0])
     }
@@ -112,7 +117,7 @@ class Evaluater(parser: Parser) : ExpVisitor<Int>, StmtVisitor<Unit> {
             return
         }
 
-        throw EvalException("label is node bound", stmt.name, stmt.line)
+        throw EvalException("label is not bound", stmt.name, stmt.line)
     }
 
     override fun visitIfStatement(stmt: IfStatement) {
