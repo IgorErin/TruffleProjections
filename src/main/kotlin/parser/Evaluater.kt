@@ -8,7 +8,7 @@ import parser.expressions.*
 import parser.statements.*
 import java.io.IOException
 
-class Evaluater(parser: Parser) : ExpVisitor<Int>, StmtVisitor<Unit> {
+/*class Evaluater(parser: Parser) : ExpVisitor<Int>, StmtVisitor<Unit> {
     private val mapOfBlocks = parser.mapOfBlocks
     private val listOfLabels = parser.listOfLabels
     private val listOfVar = parser.listOfVariables
@@ -130,4 +130,4 @@ class Evaluater(parser: Parser) : ExpVisitor<Int>, StmtVisitor<Unit> {
     override fun visitAssignStatement(stmt: AssignStatement) {
         environment.assign(stmt.nameOfVariable, stmt.exp.accept(this))
     }
-}
+}*/

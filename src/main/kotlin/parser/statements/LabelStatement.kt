@@ -1,12 +1,9 @@
 package parser.statements
 
-class LabelStatement() : Statement {
-    override fun <T> accept(visitor: StmtVisitor<T>): T {
-        TODO("Not yet implemented")
-    }
+import com.oracle.truffle.api.nodes.Node.*
 
+class LabelStatement(@Child val stmt: Statement) : Statement {
     override fun execute(args: IntArray): Int {
-        TODO("Not yet implemented")
+        return stmt.execute(args)
     }
-
 }

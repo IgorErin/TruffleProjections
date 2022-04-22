@@ -4,31 +4,13 @@ import exceptions.ParserException
 import lexer.SemanticValue.*
 import lexer.SemanticValue
 import lexer.Token
-import parser.expressions.BinExp
-import parser.expressions.Expression
-import parser.expressions.PrimeExp
-import parser.expressions.UnExp
+import parser.expressions.*
 import parser.statements.*
 
 class Parser(var tokens: List<Token>) {
     private var position = 0
     val listOfVariables = mutableListOf<String>()
-    val listOfLabels = mutableListOf<String>()
-    val mapOfBlocks = mutableMapOf<String, MutableList<Statement>>()
-
-    fun read() {
-        readVariables()
-        readLabels()
-    }
-
-    fun readLabels(): MutableMap<String, MutableList<Statement>> {
-        while (find(LABEL)) {
-            listOfLabels.add(previousToken().name)
-            mapOfBlocks[previousToken().name] = readBasicBlock()
-        }
-
-        return mapOfBlocks
-    }
+    val mapOfLabel = mutableMapOf<String, Statement>()
 
     private fun readVariables() {
         if (find(READ)) {
@@ -44,69 +26,31 @@ class Parser(var tokens: List<Token>) {
         }
     }
 
-    private fun readBasicBlock(): MutableList<Statement> {
-        val basicBloc =  mutableListOf<Statement>()
-
-        while (find(VAR)) {
-            basicBloc.add(readAssignment())
+    private fun readStatement(): Statement {
+       return when {
+            find(VAR) -> readAssign()
+            find(IF) -> readIF()
+            find(GOTO) -> readJump()
+            else -> throw ParserException("not match", current().line)
         }
-
-        if (current().value != END && current().value != LABEL) {
-            basicBloc.add(readJump())
-        }
-
-        return basicBloc
     }
 
-    private fun readAssignment(): Statement {
-        val variable = previousToken()
+    private fun readJump(): Statement {
+        val name = current().name
+
+        return JumpStatement(name)
+    }
+
+    private fun readAssign(): Statement {
+        val token = previousToken()
 
         if (!find(ASSIGN)) {
-            throw ParserException(current().name, current().line)
+            throw ParserException("not match ${current().name}", current().line)
         }
 
         val exp = readExp()
 
-        return AssignStatement(variable.name, exp)
-    }
-
-    private fun readJump(): Statement {
-        if (find(GOTO)) {
-            val exp = readValue()
-            return JumpStatement(exp.name, exp.line)
-        }
-
-        if (find(IF)) {
-            return readIfState()
-        }
-
-        if (find(RETURN)) {
-            return ReturnStatement(readExp())
-        }
-
-        throw ParserException(current().name, current().line)
-    }
-
-    private fun readIfState(): Statement {
-        val exp: Expression = readExp()
-
-
-        if (!find(GOTO)) {
-            throw ParserException(current().name, current().line)
-        }
-
-        var jumpExp = readValue()
-
-        val firstJumpLabel = JumpStatement(jumpExp.name, jumpExp.line)
-
-        if (!find(ELSE)) {
-            throw ParserException(current().name, current().line)
-        }
-
-        jumpExp = readValue()
-        val secondJumpLabel = JumpStatement(jumpExp.name, jumpExp.line)
-
-        return IfStatement(exp, firstJumpLabel, secondJumpLabel)
+        return AssignStatement(listOfVariables.indexOf(token.name), exp, readStatement())
     }
 
     private fun readExp(): Expression {
@@ -126,6 +70,7 @@ class Parser(var tokens: List<Token>) {
 
     private fun readCompare(): Expression {
         var leftExp: Expression = readTerm()
+
         while (find(GT, LT, LOEQ, GOEQ)) {
             val operation = previousToken()
             val rightTExp: Expression = readCompare()
@@ -137,6 +82,7 @@ class Parser(var tokens: List<Token>) {
 
     private fun readTerm(): Expression {
         var leftExp: Expression = readFactor()
+
         while (find(MINUS, PLUS)) {
             val operation = previousToken()
             val rightExp: Expression = readFactor()
@@ -148,6 +94,7 @@ class Parser(var tokens: List<Token>) {
 
     private fun readFactor(): Expression {
         var leftExp: Expression = readUnar()
+
         while (find(ASTER)) {
             val operation = previousToken()
             val rightExp: Expression = readUnar()
@@ -162,7 +109,6 @@ class Parser(var tokens: List<Token>) {
             val operation = previousToken()
             val value: Expression = readValue()
 
-
             return UnExp(operation, value)
         }
 
@@ -171,12 +117,22 @@ class Parser(var tokens: List<Token>) {
 
     private fun readValue(): PrimeExp {
         var exp: PrimeExp? = null
+        val token = previousToken()
 
-        if (find(VAR, INT)) {
-            val token = previousToken()
-            exp = PrimeExp(token.line, token.name, token.value)
+        when {
+            find(VAR) -> {
+                val index = listOfVariables.indexOf(token.name)
+
+                if (index == -1) {
+                    throw ParserException(current().name, current().line)
+                }
+
+                exp = VarNode(listOfVariables.indexOf(token.name))
+            }
+            find(INT) -> {
+                exp = ValNode(token.name.toInt())
+            }
         }
-
 
         return exp ?: throw ParserException(current().name, current().line)
     }
