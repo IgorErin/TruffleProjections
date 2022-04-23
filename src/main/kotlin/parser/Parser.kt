@@ -12,6 +12,12 @@ class Parser(var tokens: List<Token>) {
     val listOfVariables = mutableListOf<String>()
     val mapOfLabel = mutableMapOf<String, Statement>()
 
+    fun readProgram(): Statement {
+        readVariables()
+
+        return searchLabel(current().name)
+    }
+
     private fun readVariables() {
         if (find(READ)) {
             while (find(VAR)) {
@@ -26,19 +32,79 @@ class Parser(var tokens: List<Token>) {
         }
     }
 
-    private fun readStatement(): Statement {
+    private fun searchPositionOfLabel(name: String): Int {
+        val pos = tokens.indexOf(tokens.first { it.value == LABEL && it.name == name})
+
+        if(pos != -1) {
+            return pos
+        }
+
+        throw TODO("not label 2")
+    }
+
+    private fun readStatements(): Statement {
        return when {
             find(VAR) -> readAssign()
-            find(IF) -> readIF()
+            find(IF) -> readIf()
             find(GOTO) -> readJump()
-            else -> throw ParserException("not match", current().line)
+            find(RETURN) -> readReturn()
+            else -> throw ParserException(current().name, current().line)
         }
     }
 
-    private fun readJump(): Statement {
+    private fun readReturn(): Statement {
+        return ReturnStatement(readExp())
+    }
+
+    private fun searchLabel(name: String): Statement {
+        println(name)
+
+        val savePosition = position + 1
+        position = searchPositionOfLabel(name)
+        move()
+
+        val label = readStatements()
+        position = savePosition
+
+        mapOfLabel[name] = label
+
+        return label
+    }
+
+    private fun readIf(): Statement {
+        val exp = readExp()
+
+        if (!find(GOTO)) {
+            throw TODO("add exception for readIF")
+        }
+
+        val firstJump = readJump()
+
+        if(!find(ELSE)) {
+            throw TODO("${current()} add exception for readIF")
+        }
+
+        val secondJump = readJump()
+
+        return IfStatement(exp, firstJump, secondJump)
+    }
+
+    private fun readJump(): JumpStatement {
         val name = current().name
 
-        return JumpStatement(name)
+        return JumpStatement(name, inMapOfLabel(name) )
+    }
+
+    private fun inMapOfLabel(name: String): Statement {
+        println(mapOfLabel.keys)
+
+        if (mapOfLabel[name] == null) {
+            return searchLabel(name)
+        }
+
+        move()
+
+        return mapOfLabel[name] ?: throw TODO("not implemented label")
     }
 
     private fun readAssign(): Statement {
@@ -50,7 +116,7 @@ class Parser(var tokens: List<Token>) {
 
         val exp = readExp()
 
-        return AssignStatement(listOfVariables.indexOf(token.name), exp, readStatement())
+        return AssignStatement(listOfVariables.indexOf(token.name), exp, readStatements())
     }
 
     private fun readExp(): Expression {
@@ -121,16 +187,16 @@ class Parser(var tokens: List<Token>) {
 
         when {
             find(VAR) -> {
-                val index = listOfVariables.indexOf(token.name)
+                val index = listOfVariables.indexOf(previousToken().name)
 
                 if (index == -1) {
                     throw ParserException(current().name, current().line)
                 }
 
-                exp = VarNode(listOfVariables.indexOf(token.name))
+                exp = VarNode(index)
             }
             find(INT) -> {
-                exp = ValNode(token.name.toInt())
+                exp = ValNode(previousToken().name.toInt())
             }
         }
 

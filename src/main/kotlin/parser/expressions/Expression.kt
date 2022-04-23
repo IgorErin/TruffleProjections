@@ -1,6 +1,8 @@
 package parser.expressions
 
+import com.oracle.truffle.api.frame.VirtualFrame
+
 interface Expression {
     //fun <T> accept(visitor: ExpVisitor<T>): T
-    fun execute(args: IntArray): Int
+    fun execute(virtualFrame: VirtualFrame): Int
 }
