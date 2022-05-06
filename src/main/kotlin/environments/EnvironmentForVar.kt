@@ -1,6 +1,8 @@
 package environments
 
-class EnvironmentForVar {
+import com.oracle.truffle.api.frame.VirtualFrame
+
+class EnvironmentForVar  {
     private val env = mutableMapOf<String, Int>()
 
     fun assign(name: String, value: Int) {

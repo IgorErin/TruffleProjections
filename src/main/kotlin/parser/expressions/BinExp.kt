@@ -6,7 +6,7 @@ import exceptions.ParserException
 import lexer.SemanticValue
 import lexer.Token
 
-class BinExp(@Child val left: Expression, val operator: Token, @Child val right: Expression) : Expression, Node() {
+class BinExp(@Child val left: Expression, val operator: Token, @Child val right: Expression) : Expression() {
     override fun execute(virtualFrame: VirtualFrame): Int {
         when (operator.value) {
             SemanticValue.EQ -> {

@@ -1,8 +1,9 @@
 package parser.expressions
 
 import com.oracle.truffle.api.frame.VirtualFrame
+import com.oracle.truffle.api.nodes.Node
 
-interface Expression {
+abstract class Expression : Node() {
     //fun <T> accept(visitor: ExpVisitor<T>): T
-    fun execute(virtualFrame: VirtualFrame): Int
+    abstract fun execute(frame: VirtualFrame): Int
 }

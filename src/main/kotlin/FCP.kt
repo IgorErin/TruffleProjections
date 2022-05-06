@@ -1,5 +1,9 @@
+import com.oracle.truffle.api.Truffle
+import com.oracle.truffle.api.frame.MaterializedFrame
+import com.oracle.truffle.api.frame.VirtualFrame
 import lexer.LexerForFCP
 import lexer.Token
+import parser.MyRootNode
 import parser.Parser
 import java.io.File
 import java.io.BufferedReader
@@ -9,7 +13,7 @@ import java.io.BufferedReader
 fun main() {
     //for (i in 1..1000) {
         val startTime = System.nanoTime()
-        run("read x, y; 1: x := y - 1 if x == y goto 2 else 3 2: return x 3: x := x + 1 goto 1")
+        run("read x, y; 1: x := y - 1 if x == y goto 2 else 3 2: return x 3: x := x + 1 goto 2")
         val totalTime = System.nanoTime() - startTime
 
         println(totalTime)
@@ -23,14 +27,16 @@ fun run(source: String) {
     val tokens: List<Token> = lexer.listOfTokens
 
     val parser = Parser(tokens)
-    val tree = parser.readProgram()
+    val tree = parser.getAst()
+
+
     val inputData = mutableListOf<Int>()
 
     for (i in 1..parser.listOfVariables.size) {
-        inputData.add(readLine()?.toInt() ?: 0)
+        inputData.add(readLine()?.toInt() ?: TODO("incorrect input"))
     }
 
-    println("result: ${tree.execute(inputData.toIntArray())}")
+    println(tree.execute())
 }
 
 fun readFile() {

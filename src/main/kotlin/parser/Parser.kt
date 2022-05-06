@@ -12,7 +12,11 @@ class Parser(var tokens: List<Token>) {
     val listOfVariables = mutableListOf<String>()
     val mapOfLabel = mutableMapOf<String, Statement>()
 
-    fun readProgram(): Statement {
+    fun getAst(): Statement {
+        return readProgram()
+    }
+
+    private fun readProgram(): Statement {
         readVariables()
 
         return searchLabel(current().name)

@@ -1,8 +1,9 @@
 package parser.statements
 
 import com.oracle.truffle.api.frame.VirtualFrame
+import com.oracle.truffle.api.nodes.Node
 
-interface Statement {
+abstract class Statement: Node() {
     //fun <T> accept(visitor: StmtVisitor<T>): T
-    fun execute(virtualFrame: VirtualFrame): Int
+    abstract fun execute(frame: VirtualFrame): Int
 }

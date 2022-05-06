@@ -1,11 +1,10 @@
 package parser.statements
 
 import com.oracle.truffle.api.frame.VirtualFrame
-import com.oracle.truffle.api.nodes.Node
 import exceptions.ParserException
 
-class JumpStatement(val name: String, @Child var label: Statement? = null) : Statement, Node() {
-    override fun execute(virtualFrame: VirtualFrame): Int {
-        return label?.execute(virtualFrame) ?: throw ParserException(name, TODO())
+class JumpStatement(val name: String, @Child var label: Statement? = null) : Statement() {
+    override fun execute(frame: VirtualFrame): Int {
+        return label?.execute(frame) ?: throw ParserException(name, TODO())
     }
 }

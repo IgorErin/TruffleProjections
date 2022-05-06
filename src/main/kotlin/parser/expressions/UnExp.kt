@@ -5,12 +5,11 @@ import com.oracle.truffle.api.nodes.Node
 import lexer.SemanticValue
 import lexer.Token
 
-class UnExp(val operator: Token? = null, @Child  val right: Expression) : Expression, Node() {
-    override fun execute(virtualFrame: VirtualFrame): Int {
+class UnExp(val operator: Token? = null, @Node.Child val right: Expression) : Expression() {
+    override fun execute(frame: VirtualFrame): Int {
         return if (operator?.value == SemanticValue.MINUS) {
-            -right.execute(virtualFrame)
+            -right.execute(frame)
         } else {
-            right.execute(virtualFrame)
-        }
-    }
+            right.execute(frame)
+        }    }
 }
