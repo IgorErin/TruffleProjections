@@ -1,31 +1,28 @@
 package parser
 
-import exceptions.ParserException
-import lexer.SemanticValue.*
-import lexer.SemanticValue
-import lexer.Token
-import parser.expressions.*
-import parser.statements.*
-
-class Parser(var tokens: List<Token>) {
+/*class Parser(private val tokens: List<Token>) {
     private var position = 0
-    val listOfVariables = mutableListOf<String>()
-    val mapOfLabel = mutableMapOf<String, Statement>()
+    //private val listOfVariables = mutableListOf<String>()
+    private val mapOfLabel = mutableMapOf<String, Statement>()
+    private val frameDescriptor = FrameDescriptor()
+    val frame: VirtualFrame = Truffle.getRuntime().createVirtualFrame(null, frameDescriptor)
 
     fun getAst(): Statement {
+
         return readProgram()
     }
 
     private fun readProgram(): Statement {
         readVariables()
 
-        return searchLabel(current().name)
+        searchLabel(current().name)
     }
 
     private fun readVariables() {
         if (find(READ)) {
             while (find(VAR)) {
-                listOfVariables.add(previousToken().name)
+                //listOfVariables.add(previousToken().name)
+                frame.setInt(frameDescriptor.addFrameSlot(previousToken().name), readLine()?.toInt() ?: throw IOException("incorrect input"))
 
                 when {
                     find(COMMA) -> {}
@@ -34,16 +31,6 @@ class Parser(var tokens: List<Token>) {
                 }
             }
         }
-    }
-
-    private fun searchPositionOfLabel(name: String): Int {
-        val pos = tokens.indexOf(tokens.first { it.value == LABEL && it.name == name})
-
-        if(pos != -1) {
-            return pos
-        }
-
-        throw TODO("not label 2")
     }
 
     private fun readStatements(): Statement {
@@ -60,32 +47,18 @@ class Parser(var tokens: List<Token>) {
         return ReturnStatement(readExp())
     }
 
-    private fun searchLabel(name: String): Statement {
-        println(name)
-
-        val savePosition = position + 1
-        position = searchPositionOfLabel(name)
-        move()
-
-        val label = readStatements()
-        position = savePosition
-
-        mapOfLabel[name] = label
-
-        return label
-    }
 
     private fun readIf(): Statement {
         val exp = readExp()
 
         if (!find(GOTO)) {
-            throw TODO("add exception for readIF")
+            throw ParserException("unexpected token: ${current().name}", current().line)
         }
 
         val firstJump = readJump()
 
         if(!find(ELSE)) {
-            throw TODO("${current()} add exception for readIF")
+            throw ParserException("unexpected token: ${current().name}", current().line)
         }
 
         val secondJump = readJump()
@@ -93,23 +66,14 @@ class Parser(var tokens: List<Token>) {
         return IfStatement(exp, firstJump, secondJump)
     }
 
+
     private fun readJump(): JumpStatement {
         val name = current().name
 
         return JumpStatement(name, inMapOfLabel(name) )
     }
 
-    private fun inMapOfLabel(name: String): Statement {
-        println(mapOfLabel.keys)
-
-        if (mapOfLabel[name] == null) {
-            return searchLabel(name)
-        }
-
-        move()
-
-        return mapOfLabel[name] ?: throw TODO("not implemented label")
-    }
+    //------------------------------------------------------------------------------------------------------------------
 
     private fun readAssign(): Statement {
         val token = previousToken()
@@ -120,7 +84,7 @@ class Parser(var tokens: List<Token>) {
 
         val exp = readExp()
 
-        return AssignStatement(listOfVariables.indexOf(token.name), exp, readStatements())
+        return AssignStatement(frameDescriptor.findFrameSlot(token.name), exp, readStatements())
     }
 
     private fun readExp(): Expression {
@@ -187,20 +151,14 @@ class Parser(var tokens: List<Token>) {
 
     private fun readValue(): PrimeExp {
         var exp: PrimeExp? = null
-        val token = previousToken()
+        val token = current()
 
         when {
             find(VAR) -> {
-                val index = listOfVariables.indexOf(previousToken().name)
-
-                if (index == -1) {
-                    throw ParserException(current().name, current().line)
-                }
-
-                exp = VarNode(index)
+                exp = VarNode(frameDescriptor.findFrameSlot(token.name) ?: throw ParserException("not init var: ${token.name}", token.line) )
             }
             find(INT) -> {
-                exp = ValNode(previousToken().name.toInt())
+                exp = ValNode(token.name.toInt())
             }
         }
 
@@ -232,4 +190,4 @@ class Parser(var tokens: List<Token>) {
             position++
         }
     }
-}
+}*/

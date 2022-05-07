@@ -1,0 +1,4 @@
+package type
+
+class FCPFunction {
+}
