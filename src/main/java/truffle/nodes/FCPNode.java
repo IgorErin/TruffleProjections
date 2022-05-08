@@ -6,14 +6,21 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import truffle.FCPTypeSystem;
 import truffle.FCPTypeSystemGen;
+import truffle.types.Label;
 
 @TypeSystemReference(FCPTypeSystem.class)
 public abstract class FCPNode extends Node {
-     abstract  Object execute(VirtualFrame frame);
+     public abstract Object execute(VirtualFrame frame);
 
-     int executeInt(VirtualFrame frame) throws UnexpectedResultException {
+     public int executeInt(VirtualFrame frame) throws UnexpectedResultException {
          return FCPTypeSystemGen.expectInteger(this.execute(frame));
      }
+
+     public boolean executeBoolean(VirtualFrame frame) throws UnexpectedResultException {
+         return FCPTypeSystemGen.expectBoolean(this.execute(frame));
+     }
+
+     public Label executeLabel(VirtualFrame frame) throws UnexpectedResultException {
+         return FCPTypeSystemGen.expectLabel(this.execute(frame));
+     }
 }
-
-

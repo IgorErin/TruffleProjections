@@ -11,8 +11,8 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 public abstract class VarNode extends FCPNode {
     public abstract FrameSlot getSlot();
 
-    public static interface FrameGet<T> {
-        public T get(Frame frame, FrameSlot slot) throws FrameSlotTypeException;
+    public interface FrameGet<T> {
+        T get(Frame frame, FrameSlot slot) throws FrameSlotTypeException;
     }
 
     public <T> T readUp(FrameGet<T> getter, Frame frame) throws FrameSlotTypeException {
