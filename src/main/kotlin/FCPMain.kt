@@ -2,7 +2,7 @@ import com.oracle.truffle.api.Truffle
 import com.oracle.truffle.api.frame.FrameDescriptor
 import lexer.LexerForFCP
 import lexer.Token
-import parser.Parser
+//import parser.Parser
 
 // read x, y; 1: if x == y goto 7 else 2 2: if x < y goto 5 else 3 3: x := x - y goto 1 5: y := y - x goto 1 7: return x
 
@@ -20,8 +20,8 @@ fun run(source: String) {
 
     val tokens: List<Token> = lexer.listOfTokens
 
-    val parser = Parser(tokens)
-    val tree = parser.getAst()
+    //val parser = Parser(tokens)
+    //val tree = parser.getAst()
 
     //------------------------------------------
 
@@ -32,6 +32,6 @@ fun run(source: String) {
 
     val materializedFrame = frame.materialize()
 
-    print("result: ${tree.execute(parser.frame)}")
+    //print("result: ${tree.execute(parser.frame)}")
 
 }

@@ -11,7 +11,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.graalvm.truffle:truffle-sl:22.0.0.2")
+    implementation("org.graalvm.truffle:truffle-api:22.0.0.2")
+    annotationProcessor("org.graalvm.truffle:truffle-dsl-processor:22.0.0.2")
+
     implementation(kotlin("stdlib"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
