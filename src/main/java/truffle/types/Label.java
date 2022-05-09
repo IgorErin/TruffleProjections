@@ -4,7 +4,7 @@ import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 
 public class Label {
-    RootCallTarget callTarget;
+    public final RootCallTarget callTarget;
     MaterializedFrame lexicalScope; // from example
 
     public Label(RootCallTarget callTarget) {
