@@ -15,6 +15,10 @@ public abstract class LabelNode extends FCPNode {
 
     private boolean scopeSet = false;
 
+    protected boolean isScoped() {
+        return this.scopeSet;
+    }
+
     @Specialization(guards = "scopeSet")
     public Label getScopedLabel(VirtualFrame frame) {
         return this.getLabel();
@@ -25,10 +29,6 @@ public abstract class LabelNode extends FCPNode {
         Label label = this.getLabel();
         label.setLexicalScope(frame.materialize());
         return label;
-    }
-
-    protected boolean isScoped() {
-        return scopeSet == true;
     }
 
     static public Label createLabel(RootNode node) {
