@@ -32,14 +32,14 @@ public class InvokeNode extends FCPNode {
 
         CompilerAsserts.compilationConstant(this.arguments.length);
 
-        Object[] valArguments = new Object[this.arguments.length + 1];
+        Object[] valArguments = new Object[this.arguments.length + 1]; // arguments ?
         valArguments[0] = function.getLexicalScope();
 
         for (int i = 0; i < this.arguments.length + 1; i++) {
             valArguments[i + 1] = this.arguments[i].execute(frame);
         }
 
-        return this.callNode.call(function.callTarget,  frame, valArguments); //outdate ? TODO()
+        return this.callNode.call(function.callTarget,  frame, valArguments);
     }
 
     private Label evalFunction(VirtualFrame frame) {
