@@ -1,9 +1,9 @@
 package lexer
 
 import java.util.regex.Pattern
-import lexer.SemanticValue.*
+import lexer.Values.*
 
-class LexerForFCP(private val stringOfCode: String) {
+class LexerForScheme(private val stringOfCode: String) {
     var listOfTokens = mutableListOf<Token>()
     private var position = 0
     private var line = 1
@@ -90,7 +90,7 @@ class LexerForFCP(private val stringOfCode: String) {
     private val isEnd: Boolean
         get() = position + 1 >= stringOfCode.length
 
-    private fun addNewToken(value: SemanticValue, name: String) {
+    private fun addNewToken(value: Values, name: String) {
         listOfTokens.add(Token(value, name, line))
     }
 

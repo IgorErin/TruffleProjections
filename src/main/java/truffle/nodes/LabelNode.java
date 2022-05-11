@@ -1,5 +1,6 @@
 package truffle.nodes;
 
+import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
@@ -15,11 +16,11 @@ public abstract class LabelNode extends FCPNode {
 
     private boolean scopeSet = false;
 
-    protected boolean isScoped() {
+    public boolean isScoped() {
         return this.scopeSet;
     }
 
-    @Specialization(guards = "scopeSet")
+    @Specialization(guards = "isScoped()")
     public Label getScopedLabel(VirtualFrame frame) {
         return this.getLabel();
     }

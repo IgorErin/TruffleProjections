@@ -1,6 +1,6 @@
 package lexer
 
-enum class SemanticValue {
+enum class Values {
     IF,
     ELSE,
     GOTO,
