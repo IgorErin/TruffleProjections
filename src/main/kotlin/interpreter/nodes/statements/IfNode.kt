@@ -1,9 +1,10 @@
-package interpreter.nodes
+package interpreter.nodes.statements
 
 import interpreter.Environment
+import interpreter.nodes.Statement
 import interpreter.nodes.expressions.Expression
 
-class IfNode(val condition: Expression, val thenNode: Expression, val elseNode: Expression) : Statement{
+class IfNode(val condition: Expression, val thenNode: Expression, val elseNode: Expression) : Statement {
     override fun execute(env: Environment): Any {
         val conditionValue = condition.execute(env) as? Boolean ?: TODO("cast to Boolean exception")
 

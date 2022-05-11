@@ -3,7 +3,7 @@ package lexer
 import java.util.regex.Pattern
 import lexer.Values.*
 
-class LexerForScheme(private val stringOfCode: String) {
+class FCPLexer(private val stringOfCode: String) {
     var listOfTokens = mutableListOf<Token>()
     private var position = 0
     private var line = 1
@@ -140,6 +140,9 @@ class LexerForScheme(private val stringOfCode: String) {
             }
             "read" -> {
                 addNewToken(READ, name)
+            }
+            "def" -> {
+                addNewToken(DEFINE, name)
             }
             else -> {
                 addNewToken(VAR, name)

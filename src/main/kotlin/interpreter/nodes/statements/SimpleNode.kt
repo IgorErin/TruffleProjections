@@ -1,4 +1,4 @@
-package interpreter.nodes
+package interpreter.nodes.statements
 
 import interpreter.Executable
 

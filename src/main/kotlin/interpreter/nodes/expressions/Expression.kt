@@ -1,6 +1,5 @@
 package interpreter.nodes.expressions
 
-import interpreter.Executable
-import interpreter.nodes.SimpleNode
+import interpreter.nodes.statements.SimpleNode
 
 interface Expression : SimpleNode

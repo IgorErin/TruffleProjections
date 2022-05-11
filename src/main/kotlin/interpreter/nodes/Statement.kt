@@ -1,5 +1,5 @@
 package interpreter.nodes
 
-import interpreter.Executable
+import interpreter.nodes.statements.SimpleNode
 
 interface Statement : SimpleNode

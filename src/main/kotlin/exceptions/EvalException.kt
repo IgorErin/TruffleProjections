@@ -1,3 +1,3 @@
 package exceptions
 
-class EvalException(message: String, name: String) : Exception("$message invalid value '$name'")
+class EvalException(message: String) : Exception(message)

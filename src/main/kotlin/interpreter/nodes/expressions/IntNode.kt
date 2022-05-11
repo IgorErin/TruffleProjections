@@ -1,9 +1,10 @@
 package interpreter.nodes.expressions
 
 import interpreter.Environment
+import interpreter.nodes.Statement
 
-class VarNode(val name: String) : Expression {
+class IntNode(val value: Int) : Expression, Statement {
     override fun execute(env: Environment): Any {
-        return env.getValue(name);
+        return value
     }
 }

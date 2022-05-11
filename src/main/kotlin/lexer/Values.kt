@@ -1,6 +1,7 @@
 package lexer
 
 enum class Values {
+    DEFINE,
     IF,
     ELSE,
     GOTO,
