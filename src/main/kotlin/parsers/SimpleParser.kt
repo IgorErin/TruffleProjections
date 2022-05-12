@@ -2,14 +2,12 @@ package parsers
 
 import exceptions.ParserException
 import interpreter.nodes.Statement
-import interpreter.nodes.expressions.BinExpNode
-import interpreter.nodes.expressions.Expression
-import interpreter.nodes.expressions.MinusExpNode
+import interpreter.nodes.expressions.*
 import lexer.Values
 import lexer.Values.*
 import lexer.Token
-import interpreter.nodes.expressions.IntNode
 import interpreter.nodes.statements.*
+import interpreter.nodes.statements.ReadVarNode
 
 class SimpleParser(private val tokens: List<Token>) {
     private var position = 0
@@ -26,19 +24,18 @@ class SimpleParser(private val tokens: List<Token>) {
         }
 
         while(find(VAR)) {
-            listOfNodes.add(VarNode(previousToken().name))
+            listOfNodes.add(InvokeNode(previousToken().name))
         }
-
-        println("---------------------------------------------------------")
 
         return LabelNode(listOfNodes, "main")
     }
 
     private fun readReadBlock(): ReadNode {
-        val listOfVarNodes = mutableListOf<VarNode>()
+        val listOfVarNodes = mutableListOf<WriteVarNode>()
 
         while (find(VAR)) {
-            listOfVarNodes.add(VarNode(previousToken().name))
+            listOfVarNodes.add(WriteVarNode(previousToken().name, InputNode()))
+            println("name of  var ${previousToken().name}")
 
             when {
                 find(COMMA) -> {}
@@ -53,7 +50,7 @@ class SimpleParser(private val tokens: List<Token>) {
     private fun readDefineBlock(): DefineNode {
         if(!find(LABEL)) throw ParserException(TODO("define block"))
 
-        val listOfStatements = mutableListOf<Statement>(VarNode(previousToken().name)) // add first statement
+        val listOfStatements = mutableListOf<Statement>(SymbolNode(previousToken().name)) // add first statement
 
         while (find(VAR)) {
             listOfStatements.add(readAssignment())
@@ -62,7 +59,7 @@ class SimpleParser(private val tokens: List<Token>) {
         val lastStatement = when {
             find(IF) -> readIfStatement()
             find(RETURN) -> ReturnNode(readValue())
-            find(GOTO) -> readVariable()
+            find(GOTO) -> readInvokeNode()
             else -> throw ParserException(TODO("last stmt"))
         }
         listOfStatements.add(lastStatement)
@@ -71,13 +68,13 @@ class SimpleParser(private val tokens: List<Token>) {
     }
 
     private fun readAssignment(): Statement {
-        val variable = VarNode(previousToken().name)
+        val variableName = previousToken().name
 
         if(!find(ASSIGN)) throw ParserException(TODO("assign"))
 
         val exp = readExp()
 
-        return AssignNode(variable, exp)
+        return WriteVarNode(variableName, exp)
     }
 
     private fun readIfStatement(): Statement {
@@ -85,20 +82,20 @@ class SimpleParser(private val tokens: List<Token>) {
 
         if (!find(GOTO)) throw ParserException(TODO("GOTO"))
 
-        val thenNode = readVariable()
+        val thenNode = readInvokeNode()
 
         if (!find(ELSE)) throw ParserException(TODO("ELSE"))
 
-        val elseNode = readVariable()
+        val elseNode = readInvokeNode()
 
         return IfNode(exp, thenNode, elseNode)
     }
 
 
-    private fun readVariable(): VarNode {
-        if (!find(VAR)) throw ParserException(TODO("readVar"))
+    private fun readInvokeNode(): InvokeNode {
+        if (!find(VAR, INT)) TODO("readVar, name: ${current().value}")
 
-        return VarNode(previousToken().name)
+        return InvokeNode(previousToken().name)
     }
 
     //---------------------------------------------
@@ -168,7 +165,7 @@ class SimpleParser(private val tokens: List<Token>) {
 
         when {
             find(VAR) -> {
-                exp = VarNode(token.name)
+                exp = ReadVarNode(token.name)
             }
             find(INT) -> {
                 exp = IntNode(token.name.toInt())

@@ -9,17 +9,21 @@ import parsers.SimpleParser
 
 fun main() {
     val startTime = System.nanoTime()
-    run("read x, y; def lol: return x x")
+    run("""read x, y;
+            def first: if x == y goto 7 else 2
+            def 2: if x < y goto 5 else 3
+            def 3: x := x - y goto first
+            def 5: y := y - x goto first
+            def 7: return x
+            first""".trimIndent())
     val totalTime = System.nanoTime() - startTime
 
-    //println(totalTime)
+    println(totalTime)
 }
 
 fun run(source: String) {
     val lexer = FCPLexer(source)
     lexer.parseString()
-
-    val tokens: List<Token> = lexer.listOfTokens
 
     val parser = SimpleParser(lexer.listOfTokens)
 

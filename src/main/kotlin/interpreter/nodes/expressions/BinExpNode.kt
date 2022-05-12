@@ -6,7 +6,9 @@ import interpreter.Environment
 class BinExpNode(val leftNode: Expression, val operation: String, val rightNode: Expression) : Expression {
     override fun execute(env: Environment): Any {
         val leftNodeResult = leftNode.execute(env) as? Int ?: TODO("cast to Int error")
-        val rightNodeResult = leftNode.execute(env) as? Int ?: TODO("cast to Int error")
+        val rightNodeResult = rightNode.execute(env) as? Int ?: TODO("cast to Int error")
+
+        println("operator: ${leftNodeResult} $operation ${rightNodeResult}")
 
         return when(operation) {
             "+" -> leftNodeResult + rightNodeResult
@@ -14,6 +16,11 @@ class BinExpNode(val leftNode: Expression, val operation: String, val rightNode:
             "*" -> leftNodeResult * rightNodeResult
             "==" -> leftNodeResult == rightNodeResult
             "!=" -> leftNodeResult != rightNodeResult
+            ">" -> leftNodeResult > rightNodeResult
+            "<" -> leftNodeResult < rightNodeResult
+            ">=" -> leftNodeResult >= rightNodeResult
+            "<=" -> leftNodeResult <= rightNodeResult
+
             else -> throw ParserException(operation)
         }
     }

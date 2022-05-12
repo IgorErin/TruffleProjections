@@ -2,14 +2,11 @@ package interpreter.nodes.statements
 
 import interpreter.Environment
 import interpreter.nodes.Statement
-import java.io.IOException
 
-class ReadNode(private val listOfNodes: MutableList<VarNode>) : Statement {
+class ReadNode(private val listOfVar: MutableList<WriteVarNode>) : Statement{
     override fun execute(env: Environment): Any {
-        for (i in listOfNodes) {
-            val input = readLine()
-
-            env.setValue(i.name, input?.toInt() ?: throw IOException("$input must be number"))
+        for (i in listOfVar) {
+            i.execute(env)
         }
 
         return Unit
