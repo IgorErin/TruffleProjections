@@ -15,12 +15,4 @@ public abstract class FCPNode extends Node {
      public int executeInt(VirtualFrame frame) throws UnexpectedResultException {
          return FCPTypeSystemGen.expectInteger(this.execute(frame));
      }
-
-     public boolean executeBoolean(VirtualFrame frame) throws UnexpectedResultException {
-         return FCPTypeSystemGen.expectBoolean(this.execute(frame));
-     }
-
-     public Label executeLabel(VirtualFrame frame) throws UnexpectedResultException {
-         return FCPTypeSystemGen.expectLabel(this.execute(frame));
-     }
 }

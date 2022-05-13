@@ -3,22 +3,30 @@ import lexer.FCPLexer
 import lexer.Token
 import parsers.SimpleParser
 
-//import parser.Parser
+// LCD
+// read x, y;
+//            def first: if x == y goto 7 else 2
+//            def 2: if x < y goto 5 else 3
+//            def 3: x := x - y goto first
+//            def 5: y := y - x goto first
+//            def 7: return x
+//            first
 
-// read x, y; 1: if x == y goto 7 else 2 2: if x < y goto 5 else 3 3: x := x - y goto 1 5: y := y - x goto 1 7: return x
+//fibonacci
+//
 
 fun main() {
     val startTime = System.nanoTime()
     run("""read x, y;
-            def first: if x == y goto 7 else 2
+            def 1: if x == y goto 7 else 2
             def 2: if x < y goto 5 else 3
-            def 3: x := x - y goto first
-            def 5: y := y - x goto first
+            def 3: x := x - y goto 1
+            def 5: y := y - x goto 1
             def 7: return x
-            first""".trimIndent())
+            1""".trimIndent())
     val totalTime = System.nanoTime() - startTime
 
-    println(totalTime)
+    println("time: $totalTime")
 }
 
 fun run(source: String) {
@@ -27,9 +35,14 @@ fun run(source: String) {
 
     val parser = SimpleParser(lexer.listOfTokens)
 
-    val label = parser.readProgram()
+    val mainLabel = parser.readProgram()
 
     val env = Environment()
+    var result: Any = Unit
 
-    print(label.execute(env))
+    for (i in mainLabel) {
+        result = i.execute(env)
+    }
+
+    println("result: $result")
 }

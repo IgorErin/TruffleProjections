@@ -12,7 +12,7 @@ import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import truffle.types.Label;
 
 import java.util.Arrays;
-
+/*
 
 public class InvokeNode extends FCPNode {
     @Children FCPNode[] arguments;
@@ -55,3 +55,4 @@ public class InvokeNode extends FCPNode {
         return "Invoke " + this.labelNode + "with " + Arrays.toString(this.arguments);
     }
 }
+*/

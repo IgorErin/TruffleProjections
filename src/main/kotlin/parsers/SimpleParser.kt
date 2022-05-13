@@ -12,7 +12,7 @@ import interpreter.nodes.statements.ReadVarNode
 class SimpleParser(private val tokens: List<Token>) {
     private var position = 0
 
-    fun readProgram(): LabelNode {
+    fun readProgram(): MutableList<Statement> {
         val listOfNodes = mutableListOf<Statement>()
 
         if (find(READ)) {
@@ -23,11 +23,11 @@ class SimpleParser(private val tokens: List<Token>) {
             listOfNodes.add(readDefineBlock())
         }
 
-        while(find(VAR)) {
+        while(find(VAR, INT)) {
             listOfNodes.add(InvokeNode(previousToken().name))
         }
 
-        return LabelNode(listOfNodes, "main")
+        return listOfNodes
     }
 
     private fun readReadBlock(): ReadNode {
@@ -35,7 +35,6 @@ class SimpleParser(private val tokens: List<Token>) {
 
         while (find(VAR)) {
             listOfVarNodes.add(WriteVarNode(previousToken().name, InputNode()))
-            println("name of  var ${previousToken().name}")
 
             when {
                 find(COMMA) -> {}
@@ -50,7 +49,8 @@ class SimpleParser(private val tokens: List<Token>) {
     private fun readDefineBlock(): DefineNode {
         if(!find(LABEL)) throw ParserException(TODO("define block"))
 
-        val listOfStatements = mutableListOf<Statement>(SymbolNode(previousToken().name)) // add first statement
+        val nameOfLabel = previousToken().name
+        val listOfStatements = mutableListOf<Statement>()
 
         while (find(VAR)) {
             listOfStatements.add(readAssignment())
@@ -64,7 +64,7 @@ class SimpleParser(private val tokens: List<Token>) {
         }
         listOfStatements.add(lastStatement)
 
-        return DefineNode(listOfStatements)
+        return DefineNode(LabelNode(listOfStatements, nameOfLabel))
     }
 
     private fun readAssignment(): Statement {
@@ -94,11 +94,10 @@ class SimpleParser(private val tokens: List<Token>) {
 
     private fun readInvokeNode(): InvokeNode {
         if (!find(VAR, INT)) TODO("readVar, name: ${current().value}")
+        println("read invoke node, ${previousToken().name}")
 
         return InvokeNode(previousToken().name)
     }
-
-    //---------------------------------------------
 
     fun readExp(): Expression {
         return equality()
@@ -178,7 +177,6 @@ class SimpleParser(private val tokens: List<Token>) {
     private fun find(vararg values: Values?): Boolean {
         for (value in values) {
             if (current().value == value) {
-                println(current().name)
                 move()
 
                 return true

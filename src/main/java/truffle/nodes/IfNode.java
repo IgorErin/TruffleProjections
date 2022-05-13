@@ -28,10 +28,10 @@ public class IfNode extends FCPNode {
 
     private boolean test(FCPNode node, VirtualFrame frame) {
         try {
-            return node.executeBoolean(frame);
+            return node.executeInt(frame) != 0;
         } catch (UnexpectedResultException e) {
             Object result = this.conditionNode.execute(frame);
-            return (int) result != 0; // TODO()
+            return (int) result != 0;
         }
     }
 }

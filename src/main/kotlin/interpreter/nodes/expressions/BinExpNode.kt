@@ -8,8 +8,6 @@ class BinExpNode(val leftNode: Expression, val operation: String, val rightNode:
         val leftNodeResult = leftNode.execute(env) as? Int ?: TODO("cast to Int error")
         val rightNodeResult = rightNode.execute(env) as? Int ?: TODO("cast to Int error")
 
-        println("operator: ${leftNodeResult} $operation ${rightNodeResult}")
-
         return when(operation) {
             "+" -> leftNodeResult + rightNodeResult
             "-" -> leftNodeResult - rightNodeResult
