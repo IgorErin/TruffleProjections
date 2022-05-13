@@ -1,21 +1,18 @@
 package truffle.nodes;
 
+import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class IntNode extends  FCPNode {
-    private final int value;
-
-    public IntNode(int value) {
-        this.value = value;
-    }
+public class ReadVarNode extends FCPNode {
+    FrameSlot slot;
 
     @Override
     public Object execute(VirtualFrame frame) {
-        return value;
+        return frame.getValue(slot);
     }
 
     @Override
     public int executeInt(VirtualFrame frame) {
-        return value;
+        return frame.getInt(slot);
     }
 }

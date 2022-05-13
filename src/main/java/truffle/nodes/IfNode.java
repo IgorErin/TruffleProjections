@@ -5,33 +5,32 @@ import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import com.oracle.truffle.api.profiles.ConditionProfile;
 
 public class IfNode extends FCPNode {
-    @Child private FCPNode conditionNode;
-    @Child private FCPNode thenNode;
-    @Child private FCPNode elseNode;
+    @Child FCPNode condition;
+    @Child FCPNode thenNode;
+    @Child FCPNode elseNode;
 
     private final ConditionProfile conditionProfile = ConditionProfile.createBinaryProfile();
 
-    public IfNode(FCPNode conditionNode, FCPNode thenNode, FCPNode elseNode) {
-        this.conditionNode = conditionNode;
+    public IfNode(FCPNode condition, FCPNode thenNode, FCPNode elseNode) {
+        this.condition = condition;
         this.thenNode = thenNode;
         this.elseNode = elseNode;
     }
 
     @Override
     public Object execute(VirtualFrame frame) {
-        if (this.conditionProfile.profile(test(this.conditionNode, frame))) {
-            return this.thenNode.execute(frame);
+        if (conditionProfile.profile(test(frame))) {
+            return thenNode.execute(frame);
+        } else {
+            return elseNode.execute(frame);
         }
-
-        return this.elseNode.execute(frame);
     }
 
-    private boolean test(FCPNode node, VirtualFrame frame) {
+    private boolean test(VirtualFrame frame) {
         try {
-            return node.executeInt(frame) != 0;
+            return condition.executeBoolean(frame);
         } catch (UnexpectedResultException e) {
-            Object result = this.conditionNode.execute(frame);
-            return (int) result != 0;
+            return (int) condition.execute(frame) != 0;
         }
     }
 }

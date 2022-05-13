@@ -7,7 +7,7 @@ import lexer.Values
 import lexer.Values.*
 import lexer.Token
 import interpreter.nodes.statements.*
-import interpreter.nodes.statements.ReadVarNode
+import interpreter.nodes.expressions.ReadVarNode
 
 class SimpleParser(private val tokens: List<Token>) {
     private var position = 0

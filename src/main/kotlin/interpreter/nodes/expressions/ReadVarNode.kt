@@ -1,4 +1,4 @@
-package interpreter.nodes.statements
+package interpreter.nodes.expressions
 
 import interpreter.Environment
 import interpreter.nodes.expressions.Expression
