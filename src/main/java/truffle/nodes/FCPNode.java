@@ -3,7 +3,7 @@ package truffle.nodes;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import truffle.nodes.types.FCPFunction;
+import truffle.types.FCPFunction;
 
 public abstract class FCPNode extends Node {
     public abstract Object execute(VirtualFrame frame);

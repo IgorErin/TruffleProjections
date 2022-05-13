@@ -1,12 +1,12 @@
 package truffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
-import truffle.nodes.types.FCPFunction;
+import truffle.types.FCPFunction;
 
-public class LabelNode extends FCPNode {
+public class LambdaNode extends FCPNode {
     private FCPFunction function;
 
-    public LabelNode(FCPFunction function) {
+    public LambdaNode(FCPFunction function) {
         this.function = function;
     }
 
