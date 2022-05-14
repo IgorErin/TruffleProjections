@@ -1,11 +1,11 @@
 package truffle.types;
 
-import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.RootCallTarget;
 
-public class FCPFunction{
-    public CallTarget callTarget;
+public class FCPFunction {
+    RootCallTarget callTarget;
 
-    public FCPFunction(CallTarget callTarget) {
+    public FCPFunction(RootCallTarget callTarget) {
         this.callTarget = callTarget;
     }
 }
