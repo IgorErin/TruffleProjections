@@ -1,10 +1,11 @@
 package truffle.nodes.expressions;
 
+import com.oracle.truffle.api.dsl.GenerateNodeFactory;
 import com.oracle.truffle.api.dsl.Specialization;
 
-public abstract class MultiplyExpressionNode extends ExpressionNode {
+public abstract class MultiplyExpressionNode extends BinExpressionNode {
     @Specialization
-    public int multiply(int value0, int value1) {
-        return value0 * value1;
+    public int multiply(int leftResult, int rightResult) {
+        return leftResult * rightResult;
     }
 }

@@ -1,11 +1,10 @@
 package truffle.nodes.expressions;
 
 import com.oracle.truffle.api.dsl.Specialization;
-import truffle.nodes.FCPNode;
 
-public abstract class AddExpressionNode extends FCPNode {
+public abstract class AddExpressionNode extends BinExpressionNode {
     @Specialization
-    public int add(int value0, int value1) {
-        return value0 + value1;
+    public int add(int leftResult, int rightResult) {
+        return leftResult + rightResult;
     }
 }

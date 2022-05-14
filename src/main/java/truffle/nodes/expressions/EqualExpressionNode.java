@@ -2,9 +2,9 @@ package truffle.nodes.expressions;
 
 import com.oracle.truffle.api.dsl.Specialization;
 
-public abstract class EqualExpressionNode extends ExpressionNode {
+public abstract class EqualExpressionNode extends BinExpressionNode {
     @Specialization
-    public boolean equal(int value0, int value1) {
-        return value0 == value1;
+    public boolean equal(int leftResult, int rightResult) {
+        return leftResult == rightResult;
     }
 }
