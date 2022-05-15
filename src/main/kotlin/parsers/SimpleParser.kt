@@ -94,7 +94,6 @@ class SimpleParser(private val tokens: List<Token>) {
 
     private fun readInvokeNode(): InvokeNode {
         if (!find(VAR, INT)) TODO("readVar, name: ${current().value}")
-        println("read invoke node, ${previousToken().name}")
 
         return InvokeNode(previousToken().name)
     }

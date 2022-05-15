@@ -1,6 +1,5 @@
 package truffle.nodes.expressions;
 
-import com.oracle.truffle.api.dsl.GenerateNodeFactory;
 import com.oracle.truffle.api.dsl.Specialization;
 
 public abstract class NotEqualExpressionNode extends BinExpressionNode {

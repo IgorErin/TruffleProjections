@@ -5,9 +5,10 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameSlotTypeException;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import truffle.nodes.expressions.ExpressionNode;
 
 @NodeField(name = "slot", type = FrameSlot.class)
-public abstract class SymbolNode extends FCPNode {
+public abstract class SymbolNode extends ExpressionNode {
     public abstract FrameSlot getSlot();
 
     @Specialization(rewriteOn = FrameSlotTypeException.class)

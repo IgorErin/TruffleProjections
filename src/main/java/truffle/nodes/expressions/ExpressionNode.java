@@ -2,4 +2,4 @@ package truffle.nodes.expressions;
 
 import truffle.nodes.FCPNode;
 
-abstract class ExpressionNode extends FCPNode {}
+public abstract class ExpressionNode extends FCPNode {}
