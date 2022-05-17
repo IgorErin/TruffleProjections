@@ -1,5 +1,6 @@
 package truffle.parser;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.nodes.RootNode;
 import exceptions.ParserException;
 
@@ -9,6 +10,7 @@ import truffle.nodes.*;
 import truffle.nodes.expressions.*;
 import truffle.types.FCPFunction;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Parser {
@@ -16,13 +18,15 @@ public class Parser {
     private int position;
 
     public Parser(List<Token> listOfTokens) {
+        FrameDescriptor descriptor = new FrameDescriptor();
+
         this.listOfTokens = listOfTokens;
         this.position = 0;
     }
 
-    /*
 
-    fun readProgram(): MutableList<Statement> {
+
+    /*fun readProgram(): MutableList<Statement> {
         val listOfNodes = mutableListOf<Statement>()
 
         if (find(READ)) {
@@ -75,8 +79,8 @@ public class Parser {
         listOfStatements.add(lastStatement)
 
         return DefineNode(LabelNode(listOfStatements, nameOfLabel))
-    }
-     */
+    }*/
+
 
     private FCPNode readDefineNode() throws ParserException {
         if (!find(Values.DEFINE)) throw new ParserException("define expected, found:" + current().getName());
@@ -84,42 +88,64 @@ public class Parser {
 
     }
 
-    private FCPFunction readFCPFunction() throws ParserException {
+    private FCPFunction readFCPFunction(FrameDescriptor descriptor) throws ParserException {
+        List<FCPNode> bodyNodes = Collections.emptyList();
 
+        while (find(Values.VAR)) {
+            bodyNodes.add(readAssignment(descriptor));
+        }
+
+        Values value = current().getValue();
+        move();
+        FCPNode lastNode = switch (value) {
+            case RETURN -> readReturnNode(descriptor);
+            case GOTO -> readGoto() //TODO
+            case IF -> readIfStatement(descriptor);
+            default -> throw new ParserException("unexpected value: " + value);
+        };
+
+        bodyNodes.add(lastNode);
+        return FCPFunction.create(bodyNodes.toArray(), descriptor); //TODO()
     }
 
-    private RootNode readFCPRootNode() throws ParserException {
-
-    }
-
-    private FCPNode readAssignment() throws ParserException {
-        // TODO(add frame slot)
+    private FCPNode readAssignment(FrameDescriptor descriptor) throws ParserException {
+        String symbolName = previousToken().getName();
 
         if (!find(Values.ASSIGN)) throw new ParserException("expected assignment, found: " + current().getName());
 
         ExpressionNode exp = readExp();
 
-        return DefineNodeGen.create(exp, slot); //TODO()
+        return DefineNodeGen.create(exp, descriptor.addFrameSlot(symbolName)); //TODO()
     }
 
-    private FCPNode readIfStatement() throws ParserException {
+    private FCPNode readReturnNode(FrameDescriptor descriptor) throws ParserException {
+        return new ReturnNode(readSymbolNode(descriptor));
+    }
+
+    private FCPNode readIfStatement(FrameDescriptor descriptor) throws ParserException {
         ExpressionNode exp = readExp();
 
         if (!find(Values.GOTO)) throw new ParserException("goto expected, found:" + current().getName());
 
-        FCPNode thenNode = readInvokeNode();
+        FCPNode thenNode = readInvokeNode(descriptor);
 
         if (find(Values.ELSE)) throw new ParserException("else expected, found:" + current().getName());
 
-        FCPNode elseNode = readInvokeNode();
+        FCPNode elseNode = readInvokeNode(descriptor);
 
         return new IfNode(exp, thenNode, elseNode);
     }
 
-    private InvokeNode readInvokeNode() throws ParserException {
+    private InvokeNode readInvokeNode(FrameDescriptor descriptor) throws ParserException {
         if (!find(Values.VAR, Values.INT)) throw new ParserException("read invoke Node");
 
-        return new InvokeNode(SymbolNodeGen.create(//TODO));
+        return new InvokeNode(SymbolNodeGen.create(descriptor.findOrAddFrameSlot(previousToken().getName())));
+    }
+
+    private SymbolNode readSymbolNode(FrameDescriptor descriptor) throws ParserException {
+        if (!find(Values.VAR, Values.INT)) throw new ParserException("read invoke Node");
+
+        return SymbolNodeGen.create(descriptor.findOrAddFrameSlot(previousToken().getName()));
     }
 
 
@@ -135,12 +161,8 @@ public class Parser {
             ExpressionNode rightExp = readCompare();
 
             leftExp = switch (operation) {
-                case "==" -> {
-
-                }
-                case "!=" -> {
-
-                }
+                case "==" -> EqualExpressionNodeGen.create(leftExp, rightExp);
+                case "!=" -> NotEqualExpressionNodeGen.create(leftExp, rightExp);
                 default -> {
                     throw new ParserException("parse expression: " + operation);
                 }
@@ -159,18 +181,10 @@ public class Parser {
             ExpressionNode rightExp = readTerm();
 
             leftExp = switch (operation) {
-              case ">" -> {
-
-              }
-              case "<" -> {
-
-              }
-              case ">=" -> {
-
-              }
-              case "<=" -> {
-
-              }
+              case ">" -> GTExpressionNodeGen.create(leftExp, rightExp);
+              case "<" -> LTExpressionNodeGen.create(leftExp, rightExp);
+              case ">=" -> GTExpressionNodeGen.create(leftExp, rightExp);
+              case "<=" -> LoEqExpressionNodeGen.create(leftExp, rightExp);
               default -> {
                     throw new ParserException("parse expression: " + operation);
               }
