@@ -7,8 +7,6 @@ import lexer.Values;
 import truffle.nodes.*;
 import truffle.nodes.expressions.*;
 import truffle.types.FCPFunction;
-
-import javax.xml.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,8 +59,6 @@ public class Parser {
     }
 
     private FCPNode readDefineNode(FrameDescriptor descriptor) throws ParserException {
-        if (!find(Values.DEFINE)) throw new ParserException("define expected, found:" + current().getName());
-
         Values value = current().getValue();
         move();
 
@@ -71,7 +67,7 @@ public class Parser {
                 return readLabelDef(descriptor);
             }
             case VAR: {
-                return readAssignment(descriptor);
+                return readAssignment(descriptor); //TODO()
             }
             default: throw new ParserException("unexpected value: " + value);
         }
@@ -130,7 +126,7 @@ public class Parser {
 
         FCPFunction function = readFCPFunction(descriptor);
 
-        return DefineNodeGen.create(new LabelNode(function), descriptor.addFrameSlot(symbolName));
+        return DefineNodeGen.create(new LabelNode(function), descriptor.findOrAddFrameSlot(symbolName));
     }
 
     private FCPNode readAssignment(FrameDescriptor descriptor) throws ParserException {
@@ -140,7 +136,7 @@ public class Parser {
 
         ExpressionNode exp = readExp();
 
-        return DefineNodeGen.create(exp, descriptor.addFrameSlot(symbolName)); //TODO()
+        return DefineNodeGen.create(exp, descriptor.findOrAddFrameSlot(symbolName)); //TODO()
     }
 
     private FCPNode readReturnNode(FrameDescriptor descriptor) throws ParserException {
@@ -150,11 +146,11 @@ public class Parser {
     private FCPNode readIfStatement(FrameDescriptor descriptor) throws ParserException {
         ExpressionNode exp = readExp();
 
-        if (!find(Values.GOTO)) throw new ParserException("goto expected, found:" + current().getName());
+        if (!find(Values.GOTO)) throw new ParserException("goto expected, found: " + current().getName());
 
         FCPNode thenNode = readInvokeNode(descriptor);
 
-        if (find(Values.ELSE)) throw new ParserException("else expected, found:" + current().getName());
+        if (!find(Values.ELSE)) throw new ParserException("else expected, found: " + current().getName());
 
         FCPNode elseNode = readInvokeNode(descriptor);
 

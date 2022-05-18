@@ -12,7 +12,7 @@ import parsers.SimpleParser
 //            def 7: return x
 //            first
 
-//fibonacci
+//
 //
 
 fun main() {
