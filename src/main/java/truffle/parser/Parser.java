@@ -21,8 +21,41 @@ public class Parser {
         this.position = 0;
     }
 
-    public List<FCPNode> readProgram() {
+    public FCPNode[] readProgram(FrameDescriptor descriptor) throws ParserException {
+        List<FCPNode> nodes = new ArrayList<>();
 
+        if (find(Values.READ)) {
+            nodes.addAll(readReadBlock(descriptor));
+        }
+
+        while (find(Values.DEFINE)) {
+            nodes.add(readDefineNode(descriptor));
+        }
+
+        nodes.add(readInvokeNode(descriptor));
+
+        return nodes.toArray(new FCPNode[0]);
+    }
+
+    private ArrayList<FCPNode> readReadBlock(FrameDescriptor descriptor) throws ParserException {
+        ArrayList<FCPNode> nodes = new ArrayList<>();
+        Values value;
+
+        while (find(Values.VAR)) {
+            String name = previousToken().getName();
+            nodes.add(DefineNodeGen.create(InputNodeGen.create(), descriptor.addFrameSlot(name))); //TODO
+
+            value = current().getValue();
+            move();
+            if (value == Values.SEMCOL) {
+                break;
+            } if (value == Values.COMMA) {
+            } else {
+                throw new ParserException("unexpected value: " + value);
+            }
+        }
+
+        return nodes;
     }
 
     private FCPNode readDefineNode(FrameDescriptor descriptor) throws ParserException {
@@ -191,7 +224,6 @@ public class Parser {
 
         return readValues();
     }
-
 
     private ExpressionNode readValues() throws ParserException {
         Token token = current();
