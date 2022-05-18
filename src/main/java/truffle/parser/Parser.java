@@ -134,7 +134,7 @@ public class Parser {
 
         if (!find(Values.ASSIGN)) throw new ParserException("expected assignment, found: " + current().getName());
 
-        ExpressionNode exp = readExp();
+        ExpressionNode exp = readExp(descriptor);
 
         return DefineNodeGen.create(exp, descriptor.findOrAddFrameSlot(symbolName)); //TODO()
     }
@@ -144,7 +144,7 @@ public class Parser {
     }
 
     private FCPNode readIfStatement(FrameDescriptor descriptor) throws ParserException {
-        ExpressionNode exp = readExp();
+        ExpressionNode exp = readExp(descriptor);
 
         if (!find(Values.GOTO)) throw new ParserException("goto expected, found: " + current().getName());
 
@@ -158,7 +158,7 @@ public class Parser {
     }
 
     private InvokeNode readInvokeNode(FrameDescriptor descriptor) throws ParserException {
-        if (!find(Values.VAR, Values.INT)) throw new ParserException("read invoke Node");
+        if (!find(Values.VAR, Values.INT)) throw new ParserException("read invoke Node: " + current().getValue());
 
         return new InvokeNode(SymbolNodeGen.create(descriptor.findOrAddFrameSlot(previousToken().getName())));
     }
@@ -170,16 +170,20 @@ public class Parser {
     }
 
 
-    private ExpressionNode readExp() throws ParserException {
-        return equality();
+    private ExpressionNode readExp(FrameDescriptor descriptor) throws ParserException {
+        return equality(descriptor);
     }
 
-    private ExpressionNode equality() throws ParserException {
-        ExpressionNode leftExp = readCompare();
+    private ExpressionNode equality(FrameDescriptor descriptor) throws ParserException {
+        ExpressionNode leftExp = readCompare(descriptor);
 
         while (find(Values.EQ, Values.NOTQE)) {
             String operation = previousToken().getName();
-            ExpressionNode rightExp = readCompare();
+            ExpressionNode rightExp = readCompare(descriptor);
+
+            if (leftExp == null) {
+                throw new ParserException("left is null"); //TODO()
+            }
 
             switch (operation) {
                 case "==": {
@@ -210,12 +214,12 @@ public class Parser {
     }
 
 
-    private ExpressionNode readCompare() throws ParserException {
-        ExpressionNode leftExp = readTerm();
+    private ExpressionNode readCompare(FrameDescriptor descriptor) throws ParserException {
+        ExpressionNode leftExp = readTerm(descriptor);
 
         while(find(Values.GT, Values.LT, Values.LOEQ, Values.GOEQ)) {
             String operation = previousToken().getName();
-            ExpressionNode rightExp = readTerm();
+            ExpressionNode rightExp = readTerm(descriptor);
 
             switch (operation) {
                 case ">": {
@@ -253,12 +257,12 @@ public class Parser {
         return leftExp;
     }
 
-    private ExpressionNode readTerm() throws ParserException {
-        ExpressionNode leftExp = readFactor();
+    private ExpressionNode readTerm(FrameDescriptor descriptor) throws ParserException {
+        ExpressionNode leftExp = readFactor(descriptor);
 
         while (find(Values.MINUS, Values.PLUS)) {
             String operation = previousToken().getName();
-            ExpressionNode rightExp = readFactor();
+            ExpressionNode rightExp = readFactor(descriptor);
 
             switch (operation) {
                 case "+": {
@@ -284,33 +288,33 @@ public class Parser {
         return leftExp;
     }
 
-    private ExpressionNode readFactor() throws ParserException {
-        ExpressionNode leftExp = readSign();
+    private ExpressionNode readFactor(FrameDescriptor descriptor) throws ParserException {
+        ExpressionNode leftExp = readSign(descriptor);
 
         while (find(Values.ASTER)) {
             String operation = previousToken().getName();
-            ExpressionNode rightExp = readSign();
+            ExpressionNode rightExp = readSign(descriptor);
             leftExp = MultiplyExpressionNodeGen.create(leftExp, rightExp);
         }
 
         return leftExp;
     }
 
-    private ExpressionNode readSign() throws ParserException {
+    private ExpressionNode readSign(FrameDescriptor descriptor) throws ParserException {
         if (find(Values.MINUS)) {
-            return MinusExpressionNodeGen.create(readValues()); //change to FCP Node
+            return MinusExpressionNodeGen.create(readValues(descriptor)); //change to FCP Node
         }
 
-        return readValues();
+        return readValues(descriptor);
     }
 
-    private ExpressionNode readValues() throws ParserException {
-        Token token = current();
+    private ExpressionNode readValues(FrameDescriptor descriptor) throws ParserException {
+        String name = current().getName();
 
         if (find(Values.INT)) {
-            return new IntNode(Integer.parseInt(token.getName()));
+            return new IntNode(Integer.parseInt(name));
         } else if (find(Values.VAR)) {
-            return  null; //SymbolNodeGen.create() //slot
+            return  SymbolNodeGen.create(descriptor.findOrAddFrameSlot(name));
         }
 
         throw new ParserException("read Var or Val: " + previousToken().getName());

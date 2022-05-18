@@ -10,18 +10,14 @@ import truffle.nodes.FCPNode;
 import truffle.nodes.FCPRootNode;
 import truffle.parser.Parser;
 import truffle.types.FCPFunction;
-
-import java.util.Dictionary;
 import java.util.List;
 
 public class FCPMain {
     public static void main(String[] args) throws ParserException {
         System.out.println(pars("read x, y;" +
-                "def 1: if x == y goto 7 else 2" +
-        "def 2: if x < y goto 5 else 3" +
-        "def 3: x := x - y goto 1" +
-        "def 5: y := y - x goto 1" +
-        "def 7: return x" +
+                "def 1: return 4 " +
+        "def 5: return y " +
+        "def 7: return x " +
         "1"));
     }
 
@@ -38,10 +34,12 @@ public class FCPMain {
         FCPNode[] nodes = parser.readProgram(frameDescriptor);
         VirtualFrame frame = Truffle.getRuntime().createVirtualFrame(new Object[] {}, frameDescriptor);
 
+        System.out.println("frame descriptor: " + frameDescriptor);
+
         FCPRootNode rootNode = new FCPRootNode(nodes, frameDescriptor);
         FCPFunction function = new FCPFunction(rootNode.getCallTarget());
         DirectCallNode directCallNode = Truffle.getRuntime().createDirectCallNode(function.callTarget);
 
-        return directCallNode.call(frame);
+        return directCallNode.call(frame, frame.getArguments());
     }
 }
