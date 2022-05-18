@@ -7,6 +7,8 @@ import lexer.Values;
 import truffle.nodes.*;
 import truffle.nodes.expressions.*;
 import truffle.types.FCPFunction;
+
+import javax.xml.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,11 +65,24 @@ public class Parser {
 
         Values value = current().getValue();
         move();
+
+        switch (value) {
+            case LABEL: {
+                return readLabelDef(descriptor);
+            }
+            case VAR: {
+                return readAssignment(descriptor);
+            }
+            default: throw new ParserException("unexpected value: " + value);
+        }
+
+        /*
         return switch (value) {
             case LABEL -> readLabelDef(descriptor);
             case VAR -> readAssignment(descriptor);
             default -> { throw new ParserException("unexpected value: " + value); }
         };
+         */
     }
 
     private FCPFunction readFCPFunction(FrameDescriptor descriptor) throws ParserException {
@@ -77,17 +92,33 @@ public class Parser {
             bodyNodes.add(readAssignment(descriptor));
         }
 
+        bodyNodes.add(readJump(descriptor));
+
+        return FCPFunction.create(bodyNodes.toArray(new FCPNode[] {}), descriptor);
+    }
+
+    private FCPNode readJump(FrameDescriptor descriptor) throws ParserException {
         Values value = current().getValue();
         move();
-        FCPNode lastNode = switch (value) {
-            case RETURN -> readReturnNode(descriptor);
-            case GOTO -> readGoto(descriptor);
-            case IF -> readIfStatement(descriptor);
-            default -> throw new ParserException("unexpected value: " + value);
-        };
+        FCPNode lastNode;
 
-        bodyNodes.add(lastNode);
-        return FCPFunction.create(bodyNodes.toArray(new FCPNode[] {}), descriptor);
+        switch (value) {
+            case RETURN: {
+                lastNode = readReturnNode(descriptor);
+                break;
+            }
+            case GOTO: {
+                lastNode = readGoto(descriptor);
+                break;
+            }
+            case IF: {
+                lastNode = readIfStatement(descriptor);
+                break;
+            }
+            default: throw new ParserException("unexpected value: " + value);
+        }
+
+        return lastNode;
     }
 
     private FCPNode readGoto(FrameDescriptor descriptor) throws ParserException {
@@ -154,6 +185,21 @@ public class Parser {
             String operation = previousToken().getName();
             ExpressionNode rightExp = readCompare();
 
+            switch (operation) {
+                case "==": {
+                    leftExp = EqualExpressionNodeGen.create(leftExp, rightExp);
+                    break;
+                }
+                case "!=": {
+                    leftExp = NotEqualExpressionNodeGen.create(leftExp, rightExp);
+                    break;
+                }
+                default: {
+                    throw new ParserException("parse expression: " + operation);
+                }
+            }
+
+            /*
             leftExp = switch (operation) {
                 case "==" -> EqualExpressionNodeGen.create(leftExp, rightExp);
                 case "!=" -> NotEqualExpressionNodeGen.create(leftExp, rightExp);
@@ -161,6 +207,7 @@ public class Parser {
                     throw new ParserException("parse expression: " + operation);
                 }
             };
+             */
         }
 
         return leftExp;
@@ -174,15 +221,37 @@ public class Parser {
             String operation = previousToken().getName();
             ExpressionNode rightExp = readTerm();
 
-            leftExp = switch (operation) {
-              case ">" -> GTExpressionNodeGen.create(leftExp, rightExp);
-              case "<" -> LTExpressionNodeGen.create(leftExp, rightExp);
-              case ">=" -> GTExpressionNodeGen.create(leftExp, rightExp);
-              case "<=" -> LoEqExpressionNodeGen.create(leftExp, rightExp);
-              default -> {
+            switch (operation) {
+                case ">": {
+                    leftExp = GTExpressionNodeGen.create(leftExp, rightExp);
+                    break;
+                }
+                case "<":{
+                    leftExp = LTExpressionNodeGen.create(leftExp, rightExp);
+                    break;
+                }
+                case ">=": {
+                    leftExp = GoEExpressionNodeGen.create(leftExp, rightExp);
+                    break;
+                }
+                case "<=": {
+                    leftExp = LoEqExpressionNodeGen.create(leftExp, rightExp);
+                    break;
+                }
+                default: {
                     throw new ParserException("parse expression: " + operation);
-              }
+                }
+            }
+
+            /*
+            leftExp = switch (operation) {
+                case ">" -> GTExpressionNodeGen.create(leftExp, rightExp);
+                case "<" -> LTExpressionNodeGen.create(leftExp, rightExp);
+                case ">=" -> GoEExpressionNodeGen.create(leftExp, rightExp);
+                case "<=" -> LoEqExpressionNodeGen.create(leftExp, rightExp);
+                default ->  throw new ParserException("parse expression: " + operation);
             };
+            */
         }
 
         return leftExp;
@@ -195,11 +264,25 @@ public class Parser {
             String operation = previousToken().getName();
             ExpressionNode rightExp = readFactor();
 
+            switch (operation) {
+                case "+": {
+                    leftExp = AddExpressionNodeGen.create(leftExp, rightExp);
+                    break;
+                }
+                case "-": {
+                    leftExp = SubtractionExpressionNodeGen.create(leftExp, rightExp);
+                    break;
+                }
+                default: throw new ParserException("parse expression: " + operation);
+            };
+
+            /*
             leftExp = switch (operation) {
                 case "+" -> AddExpressionNodeGen.create(leftExp, rightExp);
                 case "-" -> SubtractionExpressionNodeGen.create(leftExp, rightExp);
                 default -> throw new ParserException("parse expression: " + operation);
             };
+            */
         }
 
         return leftExp;
