@@ -1,16 +1,13 @@
 package truffle.parser;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
-import com.oracle.truffle.api.nodes.RootNode;
 import exceptions.ParserException;
-
 import lexer.Token;
 import lexer.Values;
 import truffle.nodes.*;
 import truffle.nodes.expressions.*;
 import truffle.types.FCPFunction;
-
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -24,72 +21,24 @@ public class Parser {
         this.position = 0;
     }
 
+    public List<FCPNode> readProgram() {
 
-
-    /*fun readProgram(): MutableList<Statement> {
-        val listOfNodes = mutableListOf<Statement>()
-
-        if (find(READ)) {
-            listOfNodes.add(readReadBlock())
-        }
-
-        while (find(DEFINE)) {
-            listOfNodes.add(readDefineBlock())
-        }
-
-        while(find(VAR, INT)) {
-            listOfNodes.add(InvokeNode(previousToken().name))
-        }
-
-        return listOfNodes
     }
 
-    private fun readReadBlock(): ReadNode {
-        val listOfVarNodes = mutableListOf<WriteVarNode>()
-
-        while (find(VAR)) {
-            listOfVarNodes.add(WriteVarNode(previousToken().name, InputNode()))
-
-            when {
-                find(COMMA) -> {}
-                find(SEMCOL) -> break
-                else -> throw ParserException("strange token: ${current().name}")
-            }
-        }
-
-        return ReadNode(listOfVarNodes)
-    }
-
-    private fun readDefineBlock(): DefineNode {
-        if(!find(LABEL)) throw ParserException(TODO("define block"))
-
-        val nameOfLabel = previousToken().name
-        val listOfStatements = mutableListOf<Statement>()
-
-        while (find(VAR)) {
-            listOfStatements.add(readAssignment())
-        }
-
-        val lastStatement = when {
-            find(IF) -> readIfStatement()
-            find(RETURN) -> ReturnNode(readValue())
-            find(GOTO) -> readInvokeNode()
-            else -> throw ParserException(TODO("last stmt"))
-        }
-        listOfStatements.add(lastStatement)
-
-        return DefineNode(LabelNode(listOfStatements, nameOfLabel))
-    }*/
-
-
-    private FCPNode readDefineNode() throws ParserException {
+    private FCPNode readDefineNode(FrameDescriptor descriptor) throws ParserException {
         if (!find(Values.DEFINE)) throw new ParserException("define expected, found:" + current().getName());
 
-
+        Values value = current().getValue();
+        move();
+        return switch (value) {
+            case LABEL -> readLabelDef(descriptor);
+            case VAR -> readAssignment(descriptor);
+            default -> { throw new ParserException("unexpected value: " + value); }
+        };
     }
 
     private FCPFunction readFCPFunction(FrameDescriptor descriptor) throws ParserException {
-        List<FCPNode> bodyNodes = Collections.emptyList();
+        List<FCPNode> bodyNodes = new ArrayList<>();
 
         while (find(Values.VAR)) {
             bodyNodes.add(readAssignment(descriptor));
@@ -99,13 +48,25 @@ public class Parser {
         move();
         FCPNode lastNode = switch (value) {
             case RETURN -> readReturnNode(descriptor);
-            case GOTO -> readGoto() //TODO
+            case GOTO -> readGoto(descriptor);
             case IF -> readIfStatement(descriptor);
             default -> throw new ParserException("unexpected value: " + value);
         };
 
         bodyNodes.add(lastNode);
-        return FCPFunction.create(bodyNodes.toArray(), descriptor); //TODO()
+        return FCPFunction.create(bodyNodes.toArray(new FCPNode[] {}), descriptor);
+    }
+
+    private FCPNode readGoto(FrameDescriptor descriptor) throws ParserException {
+        return new InvokeNode(readSymbolNode(descriptor));
+    }
+
+    private FCPNode readLabelDef(FrameDescriptor descriptor) throws ParserException {
+        String symbolName = previousToken().getName();
+
+        FCPFunction function = readFCPFunction(descriptor);
+
+        return DefineNodeGen.create(new LabelNode(function), descriptor.addFrameSlot(symbolName));
     }
 
     private FCPNode readAssignment(FrameDescriptor descriptor) throws ParserException {
@@ -203,7 +164,7 @@ public class Parser {
 
             leftExp = switch (operation) {
                 case "+" -> AddExpressionNodeGen.create(leftExp, rightExp);
-                case "-" -> SubtractionExpressionNodeGen.create(leftExp, rightExp); //TODO
+                case "-" -> SubtractionExpressionNodeGen.create(leftExp, rightExp);
                 default -> throw new ParserException("parse expression: " + operation);
             };
         }
@@ -212,11 +173,11 @@ public class Parser {
     }
 
     private ExpressionNode readFactor() throws ParserException {
-        ExpressionNode leftExp = readSign(); //TODO
+        ExpressionNode leftExp = readSign();
 
         while (find(Values.ASTER)) {
             String operation = previousToken().getName();
-            ExpressionNode rightExp = readSign(); //TODO()
+            ExpressionNode rightExp = readSign();
             leftExp = MultiplyExpressionNodeGen.create(leftExp, rightExp);
         }
 
