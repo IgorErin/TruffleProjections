@@ -15,7 +15,7 @@ public abstract class DefineNode extends FCPNode {
 
     @Specialization(guards = "isInt()")
     protected int writeInt(VirtualFrame frame, int value) {
-        System.out.println("intwrite Node, value: " + value);
+        System.out.println("in write Node, value: " + value);
         frame.setInt(this.getSlot(), value);
         return value;
     }
@@ -24,7 +24,7 @@ public abstract class DefineNode extends FCPNode {
     protected Object writeObject(VirtualFrame frame, Object value) {
         FrameSlot slot = this.getSlot();
         System.out.println("in write Node,Generic value: " + value);
-        System.out.println("in write Node,Generic value, descriptor: " + frame.getFrameDescriptor());
+
         if (slot.getKind() != FrameSlotKind.Object) {
             CompilerDirectives.transferToInterpreter();
             slot.setKind(FrameSlotKind.Object);

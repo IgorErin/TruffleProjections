@@ -30,6 +30,6 @@ public class InvokeNode extends FCPNode {
     public Object execute(VirtualFrame frame) {
         FCPFunction function = this.evalFunction(frame);
 
-        return callNode.call(function.callTarget, frame.getArguments()); //work ??? TODO()
+        return this.callNode.call(function.callTarget, frame); //work ??? TODO()
     }
 }

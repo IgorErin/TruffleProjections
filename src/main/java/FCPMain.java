@@ -15,7 +15,7 @@ import java.util.List;
 public class FCPMain {
     public static void main(String[] args) throws ParserException {
         System.out.println(pars("read x, y;" +
-                "def 1: return 4 " +
+                "def 1: return x " +
         "def 5: return y " +
         "def 7: return x " +
         "1"));
