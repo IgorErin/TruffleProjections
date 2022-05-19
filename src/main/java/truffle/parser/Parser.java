@@ -140,7 +140,7 @@ public class Parser {
     }
 
     private FCPNode readReturnNode(FrameDescriptor descriptor) throws ParserException {
-        return new ReturnNode(readSymbolNode(descriptor));
+        return new ReturnNode(readValues(descriptor));
     }
 
     private FCPNode readIfStatement(FrameDescriptor descriptor) throws ParserException {

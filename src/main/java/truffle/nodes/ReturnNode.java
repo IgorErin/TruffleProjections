@@ -3,14 +3,14 @@ package truffle.nodes;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 public class ReturnNode extends FCPNode {
-    @Child private SymbolNode symbolNode;
+    @Child private FCPNode node;
 
-    public ReturnNode(SymbolNode symbolNode) {
-        this.symbolNode = symbolNode;
+    public ReturnNode(FCPNode node) {
+        this.node = node;
     }
 
     @Override
     public Object execute(VirtualFrame frame) {
-        return symbolNode.execute(frame);
+        return node.execute(frame);
     }
 }

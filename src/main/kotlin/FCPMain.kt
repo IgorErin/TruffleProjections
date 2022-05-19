@@ -16,17 +16,21 @@ import parsers.SimpleParser
 //
 
 fun main() {
-    val startTime = System.nanoTime()
-    run("""read x, y;
+    for (i in 1..100) {
+        val startTime = System.nanoTime()
+        run(
+            """ def init: x := 4 y := 8 goto 1
             def 1: if x == y goto 7 else 2
             def 2: if x < y goto 5 else 3
             def 3: x := x - y goto 1
             def 5: y := y - x goto 1
             def 7: return x
-            1""".trimIndent())
-    val totalTime = System.nanoTime() - startTime
+            init""".trimIndent()
+        )
+        val totalTime = System.nanoTime() - startTime
 
-    println("time: $totalTime")
+        println("time: $totalTime")
+    }
 }
 
 fun run(source: String) {

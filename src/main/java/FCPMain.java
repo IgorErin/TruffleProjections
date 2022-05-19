@@ -2,7 +2,6 @@ import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.DirectCallNode;
-import com.oracle.truffle.api.nodes.RootNode;
 import exceptions.ParserException;
 import lexer.FCPLexer;
 import lexer.Token;
@@ -14,11 +13,21 @@ import java.util.List;
 
 public class FCPMain {
     public static void main(String[] args) throws ParserException {
-        System.out.println(pars("read x, y;" +
-                "def 1: return x " +
-        "def 5: return y " +
-        "def 7: return x " +
-        "1"));
+
+        //System.out.println(System.console().readLine());
+        for (int i = 0; i < 1000; i++) {
+            long time = System.nanoTime();
+            System.out.println(pars(
+                    "def init: x := 4 y := 8 goto 1\n" +
+                            "            def 1: if x == y goto 7 else 2\n" +
+                            "            def 2: if x < y goto 5 else 3\n" +
+                            "            def 3: x := x - y goto 1\n" +
+                            "            def 5: y := y - x goto 1\n" +
+                            "            def 7: return x\n" +
+                            "init"));
+            time = System.nanoTime() - time;
+            System.out.println("time: " + time);
+        }
     }
 
     private static Object pars(String stringOfCode) throws ParserException {

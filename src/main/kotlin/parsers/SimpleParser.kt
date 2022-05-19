@@ -60,7 +60,7 @@ class SimpleParser(private val tokens: List<Token>) {
             find(IF) -> readIfStatement()
             find(RETURN) -> ReturnNode(readValue())
             find(GOTO) -> readInvokeNode()
-            else -> throw ParserException(TODO("last stmt"))
+            else -> throw ParserException(TODO("last stmt " + current().name))
         }
         listOfStatements.add(lastStatement)
 
@@ -70,7 +70,7 @@ class SimpleParser(private val tokens: List<Token>) {
     private fun readAssignment(): Statement {
         val variableName = previousToken().name
 
-        if(!find(ASSIGN)) throw ParserException(TODO("assign"))
+        if(!find(ASSIGN)) throw ParserException(TODO("assign: ${current().name}"))
 
         val exp = readExp()
 
