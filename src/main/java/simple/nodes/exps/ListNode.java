@@ -5,6 +5,7 @@ import simple.nodes.Node;
 import simple.types.Function;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ListNode implements Node {
@@ -12,6 +13,10 @@ public class ListNode implements Node {
 
     public ListNode(List<Node> nodeList) {
         this.nodeList = nodeList;
+    }
+
+    public Iterator<Node> iterator() {
+        return nodeList.iterator();
     }
 
     @Override

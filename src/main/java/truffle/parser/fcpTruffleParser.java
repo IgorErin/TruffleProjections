@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ErrorNode;
+import simple.Environment;
 import simple.nodes.Node;
 import simple.nodes.exps.BooleanNode;
 import simple.nodes.exps.IntNode;
@@ -11,6 +12,7 @@ import simple.nodes.exps.ListNode;
 import simple.nodes.exps.VarNode;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
 public class fcpTruffleParser extends fcpBaseListener {
@@ -18,15 +20,15 @@ public class fcpTruffleParser extends fcpBaseListener {
 
     public Node getRootListNode() throws RuntimeException {
         if (nodeListStack.size() == 1) {
-            return getLastListNode();
+            return new ListNode(getLastList());
         }
 
         throw new RuntimeException("Parse exception, not complete root list or empty list");
     }
 
-    private Node getLastListNode() {
+    private List<Node> getLastList() {
         if (nodeListStack.size() >= 1) {
-            return new ListNode(nodeListStack.pop());
+            return nodeListStack.pop();
         }
 
         throw new RuntimeException("Parse exception, empty list queue");
@@ -51,11 +53,13 @@ public class fcpTruffleParser extends fcpBaseListener {
 
     @Override public void exitList(fcpParser.ListContext ctx) {
         if (nodeListStack.size() > 1) {
-            addNodeToCurrentList(getLastListNode());
+            addNodeToCurrentList(new ListNode(getLastList()));
         }
     }
 
     @Override public void enterLiteral(fcpParser.LiteralContext ctx) {
+        System.out.println("1 --->>> " + ctx.getText());
+
         if (ctx.INT() != null) {
             int intNumber = Integer.parseInt(ctx.INT().getText());
             addNodeToCurrentList(new IntNode(intNumber));
@@ -64,10 +68,13 @@ public class fcpTruffleParser extends fcpBaseListener {
         } else if (ctx.BOOLEAN() != null) {
             addNodeToCurrentList(new BooleanNode(ctx.BOOLEAN().getText()));
         } else {
-            throw new RuntimeException("Unknown lexeme in parse process");
+            //throw new RuntimeException("Unknown lexeme in parse process" + ctx.getText());
         }
     }
-    @Override public void exitLiteral(fcpParser.LiteralContext ctx) { }
+
+    @Override public void exitLiteral(fcpParser.LiteralContext ctx) {
+        System.out.println("2 --->>> " + ctx.getText());
+    }
 
     //@Override public void enterEveryRule(ParserRuleContext ctx) { }
 
@@ -79,16 +86,7 @@ public class fcpTruffleParser extends fcpBaseListener {
 
     public static void main(String[] args) {
         try {
-            CodePointCharStream input = CharStreams.fromString("(define fibonacci\n" +
-                    "  (lambda (n)\n" +
-                    "    (define iter\n" +
-                    "      (lambda (i n1 n2)\n" +
-                    "        (if (= i 0)\n" +
-                    "            n2\n" +
-                    "            (iter (- i 1)\n" +
-                    "                  n2\n" +
-                    "                  (+ n1 n2)))))\n" +
-                    "    (iter n 0 1)))");
+            CodePointCharStream input = CharStreams.fromString("(ffw)");
 
             fcpLexer lexer = new fcpLexer(input);
             fcpParser parser = new fcpParser(new CommonTokenStream(lexer));
@@ -97,7 +95,10 @@ public class fcpTruffleParser extends fcpBaseListener {
             parser.addParseListener(truffleParser);
             parser.program();
 
-            //System.out.println("result: " + truffleParser.getRootNode());
+            Node rootNode = truffleParser.getRootListNode();
+            Environment newEnv = new Environment();
+
+            System.out.println(rootNode.eval(newEnv));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

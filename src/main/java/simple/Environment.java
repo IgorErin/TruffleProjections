@@ -1,5 +1,7 @@
 package simple;
 
+import simple.nodes.stmts.BuiltinFun;
+
 import java.util.HashMap;
 
 public class Environment {
@@ -12,6 +14,8 @@ public class Environment {
 
     public Environment(Environment paren) {
         this.paren = paren;
+        env.put("+", BuiltinFun.plusFun);
+        env.put("-", BuiltinFun.minusFun);
     }
 
     public Object getValue(String name) {

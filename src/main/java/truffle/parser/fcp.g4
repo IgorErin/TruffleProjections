@@ -2,7 +2,9 @@ grammar fcp;
 
 program : list*;
 
-list : '(' (list | literal)* ')';
+list : '(' entry* ')';
+
+entry : literal | list;
 
 literal : INT
         | BOOLEAN
