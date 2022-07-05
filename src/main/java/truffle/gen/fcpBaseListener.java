@@ -1,5 +1,5 @@
 // Generated from /home/zzigor/Projects/TruffleProjections/src/main/java/truffle/parser/fcp.g4 by ANTLR 4.10.1
-package truffle.parser;
+package truffle.gen;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -35,6 +35,18 @@ public class fcpBaseListener implements fcpListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitList(fcpParser.ListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEntry(fcpParser.EntryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEntry(fcpParser.EntryContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

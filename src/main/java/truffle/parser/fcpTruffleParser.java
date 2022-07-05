@@ -1,5 +1,6 @@
 package truffle.parser;
 
+import com.sun.source.tree.EnhancedForLoopTree;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -8,8 +9,11 @@ import simple.Environment;
 import simple.nodes.Node;
 import simple.nodes.exps.BooleanNode;
 import simple.nodes.exps.IntNode;
-import simple.nodes.exps.ListNode;
 import simple.nodes.exps.VarNode;
+import simple.nodes.stmts.Statement;
+import truffle.gen.fcpBaseListener;
+import truffle.gen.fcpLexer;
+import truffle.gen.fcpParser;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,9 +22,9 @@ import java.util.Stack;
 public class fcpTruffleParser extends fcpBaseListener {
     private final Stack<LinkedList<Node>> nodeListStack = new Stack<LinkedList<Node>>();
 
-    public Node getRootListNode() throws RuntimeException {
+    public List<Node> getRootNodeList() throws RuntimeException {
         if (nodeListStack.size() == 1) {
-            return new ListNode(getLastList());
+            return getLastList();
         }
 
         throw new RuntimeException("Parse exception, not complete root list or empty list");
@@ -43,7 +47,9 @@ public class fcpTruffleParser extends fcpBaseListener {
         }
     }
 
-    //@Override public void enterProgram(fcpParser.ProgramContext ctx) { System.out.println(ctx.list()); }
+    @Override public void enterProgram(fcpParser.ProgramContext ctx) {
+        nodeListStack.push(new LinkedList<Node>());
+    }
 
     //@Override public void exitProgram(fcpParser.ProgramContext ctx) { }
 
@@ -53,11 +59,11 @@ public class fcpTruffleParser extends fcpBaseListener {
 
     @Override public void exitList(fcpParser.ListContext ctx) {
         if (nodeListStack.size() > 1) {
-            addNodeToCurrentList(new ListNode(getLastList()));
+            addNodeToCurrentList(Statement.check(getLastList()));
         }
     }
 
-    @Override public void enterLiteral(fcpParser.LiteralContext ctx) {
+    /*@Override public void enterLiteral(fcpParser.LiteralContext ctx) {
         System.out.println("1 --->>> " + ctx.getText());
 
         if (ctx.INT() != null) {
@@ -68,12 +74,23 @@ public class fcpTruffleParser extends fcpBaseListener {
         } else if (ctx.BOOLEAN() != null) {
             addNodeToCurrentList(new BooleanNode(ctx.BOOLEAN().getText()));
         } else {
-            //throw new RuntimeException("Unknown lexeme in parse process" + ctx.getText());
+            throw new RuntimeException("Unknown lexeme in parse process" + ctx.getText());
         }
-    }
+    }*/
 
     @Override public void exitLiteral(fcpParser.LiteralContext ctx) {
-        System.out.println("2 --->>> " + ctx.getText());
+        System.out.println(nodeListStack.size() + " --->>> " + ctx.getText());
+
+        if (ctx.INT() != null) {
+            int intNumber = Integer.parseInt(ctx.INT().getText());
+            addNodeToCurrentList(new IntNode(intNumber));
+        } else if (ctx.SYMBOL() != null) {
+            addNodeToCurrentList(new VarNode(ctx.SYMBOL().getText()));
+        } else if (ctx.BOOLEAN() != null) {
+            addNodeToCurrentList(new BooleanNode(ctx.BOOLEAN().getText()));
+        } else {
+            throw new RuntimeException("Unknown lexeme in parse process" + ctx.getText());
+        }
     }
 
     //@Override public void enterEveryRule(ParserRuleContext ctx) { }
@@ -86,7 +103,7 @@ public class fcpTruffleParser extends fcpBaseListener {
 
     public static void main(String[] args) {
         try {
-            CodePointCharStream input = CharStreams.fromString("(ffw)");
+            CodePointCharStream input = CharStreams.fromString("(define a (+ 2 3)) (+ a )");
 
             fcpLexer lexer = new fcpLexer(input);
             fcpParser parser = new fcpParser(new CommonTokenStream(lexer));
@@ -95,10 +112,15 @@ public class fcpTruffleParser extends fcpBaseListener {
             parser.addParseListener(truffleParser);
             parser.program();
 
-            Node rootNode = truffleParser.getRootListNode();
+            List<Node> rootNodeList = truffleParser.getRootNodeList();
             Environment newEnv = new Environment();
+            Object result = null;
 
-            System.out.println(rootNode.eval(newEnv));
+            for (Node node : rootNodeList) {
+                result = node.eval(newEnv);
+            }
+
+            System.out.println("output: " + result);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

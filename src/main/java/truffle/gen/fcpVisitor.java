@@ -1,5 +1,5 @@
 // Generated from /home/zzigor/Projects/TruffleProjections/src/main/java/truffle/parser/fcp.g4 by ANTLR 4.10.1
-package truffle.parser;
+package truffle.gen;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -22,6 +22,12 @@ public interface fcpVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitList(fcpParser.ListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link fcpParser#entry}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEntry(fcpParser.EntryContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link fcpParser#literal}.
 	 * @param ctx the parse tree

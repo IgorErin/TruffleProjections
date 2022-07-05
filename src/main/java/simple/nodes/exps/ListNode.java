@@ -25,13 +25,24 @@ public class ListNode implements Node {
             return null;
         }
 
-        Function lambda = (Function) nodeList.get(0).eval(env);
+        try {
+            Function lambda = (Function) nodeList.get(0).eval(env);
+            List<Object> args = new ArrayList<Object>();
+            for (Node i : nodeList.subList(1, nodeList.size())) {
+                args.add(i.eval(env));
+            }
 
-        List<Object> args = new ArrayList<Object>();
+            return lambda.execute(args);
+        } catch (Exception e) {
+            System.out.println("in list eval -> " + e.getMessage());
+            return null;
+        }
+
+        /*List<Object> args = new ArrayList<Object>();
         for (Node i : nodeList.subList(1, nodeList.size())) {
             args.add(i.eval(env));
         }
 
-        return lambda.execute(args);
+        return lambda.execute(args);*/
     }
 }

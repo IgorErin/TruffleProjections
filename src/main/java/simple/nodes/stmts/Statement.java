@@ -9,15 +9,21 @@ import simple.types.Function;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Statement implements Node {
-    private final List<Node> nodeList;
+    protected final List<Node> nodeList;
 
     private Statement(List<Node> nodeList) {
         this.nodeList = nodeList;
     }
 
-    private class IfStatement extends Statement {
+    @Override
+    public Object eval(Environment env) {
+        return null;
+    }
+
+    private static class IfStatement extends Statement {
         public IfStatement(List<Node> nodeList) {
             super(nodeList);
         }
@@ -36,7 +42,7 @@ public abstract class Statement implements Node {
         }
     }
 
-    private class DefineStatement extends Statement {
+    private static class DefineStatement extends Statement {
         private DefineStatement(List<Node> nodeList) {
             super(nodeList);
         }
@@ -44,7 +50,7 @@ public abstract class Statement implements Node {
         @Override
         public Object eval(Environment env) {
             String defName = ((VarNode) nodeList.get(1)).name();
-            ListNode defBody = new ListNode(nodeList.subList(2, nodeList.size()));
+            Node defBody = nodeList.get(2);
 
             env.putValue(defName, defBody.eval(env));
 
@@ -52,7 +58,7 @@ public abstract class Statement implements Node {
         }
     }
 
-    private class LambdaStatement extends Statement {
+    private static class LambdaStatement extends Statement {
         private LambdaStatement(List<Node> nodeList) {
             super(nodeList);
         }
@@ -61,7 +67,7 @@ public abstract class Statement implements Node {
         public Object eval(Environment env) {
             ListNode formalParameters = (ListNode) nodeList.get(1);
             List<String> names = new LinkedList<String>();
-            ListNode body = (ListNode) nodeList.get(2);
+            Node body = nodeList.get(2);
 
             return new Function() {
                 @Override
@@ -77,39 +83,38 @@ public abstract class Statement implements Node {
                         );
                     }
 
-                    Environment newEnv = env;
+                    Environment newEnv = new Environment(env);
                     Object result = null;
 
                     for (String name : names) {
                         newEnv.putValue(name, args);
                     }
 
-                    for (Iterator<Node> it = body.iterator(); it.hasNext(); ) {
-                        Node node = (Node) it.next();
+                    /*for (Iterator<Node> it = body.iterator(); it.hasNext(); ) {
+                        Node node = it.next();
                         result = node.eval(newEnv);
                     }
 
-                    return result;
+                    return result;*/
+
+                    return body.eval(newEnv);
                 }
             };
         }
     }
 
-    private final Node DEFINE_NODE = new VarNode("define");
-    private final Node IF_NODE = new VarNode("define");
-    private final Node LAMBDA = new VarNode("define");
-
-    public Node check(List<Node> nodeList) {
+    public static Node check(List<Node> nodeList) {
+        System.out.println("lol");
         if (nodeList.isEmpty()) {
             return new ListNode(nodeList);
         } else {
-            Node node = nodeList.get(0);
+            String name = ((VarNode) nodeList.get(0)).name();
 
-            if (nodeList.size() == 3 && node.equals(DEFINE_NODE)) {
+            if (nodeList.size() == 3 && Objects.equals(name, "define")) {
                 return new DefineStatement(nodeList);
-            } else if (nodeList.size() == 4 && node.equals(IF_NODE)) {
+            } else if (nodeList.size() == 4 && Objects.equals(name, "if")) {
                 return new IfStatement(nodeList);
-            } else if (nodeList.size() == 3 && node.equals(LAMBDA)) {
+            } else if (nodeList.size() == 3 && Objects.equals(name, "lambda")) {
                 return new LambdaStatement(nodeList);
             } else {
                 return new ListNode(nodeList);

@@ -1,5 +1,5 @@
 // Generated from /home/zzigor/Projects/TruffleProjections/src/main/java/truffle/parser/fcp.g4 by ANTLR 4.10.1
-package truffle.parser;
+package truffle.gen;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -27,6 +27,16 @@ public interface fcpListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitList(fcpParser.ListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link fcpParser#entry}.
+	 * @param ctx the parse tree
+	 */
+	void enterEntry(fcpParser.EntryContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link fcpParser#entry}.
+	 * @param ctx the parse tree
+	 */
+	void exitEntry(fcpParser.EntryContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link fcpParser#literal}.
 	 * @param ctx the parse tree

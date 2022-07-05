@@ -1,5 +1,5 @@
 // Generated from /home/zzigor/Projects/TruffleProjections/src/main/java/truffle/parser/fcp.g4 by ANTLR 4.10.1
-package truffle.parser;
+package truffle.gen;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -19,10 +19,10 @@ public class fcpParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, INT=3, BOOLEAN=4, SYMBOL=5, WS=6;
 	public static final int
-		RULE_program = 0, RULE_list = 1, RULE_literal = 2;
+		RULE_program = 0, RULE_list = 1, RULE_entry = 2, RULE_literal = 3;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"program", "list", "literal"
+			"program", "list", "entry", "literal"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -122,17 +122,17 @@ public class fcpParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(9);
+			setState(11);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__0) {
 				{
 				{
-				setState(6);
+				setState(8);
 				list();
 				}
 				}
-				setState(11);
+				setState(13);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -150,17 +150,11 @@ public class fcpParser extends Parser {
 	}
 
 	public static class ListContext extends ParserRuleContext {
-		public List<ListContext> list() {
-			return getRuleContexts(ListContext.class);
+		public List<EntryContext> entry() {
+			return getRuleContexts(EntryContext.class);
 		}
-		public ListContext list(int i) {
-			return getRuleContext(ListContext.class,i);
-		}
-		public List<LiteralContext> literal() {
-			return getRuleContexts(LiteralContext.class);
-		}
-		public LiteralContext literal(int i) {
-			return getRuleContext(LiteralContext.class,i);
+		public EntryContext entry(int i) {
+			return getRuleContext(EntryContext.class,i);
 		}
 		public ListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -188,40 +182,88 @@ public class fcpParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(12);
+			setState(14);
 			match(T__0);
-			setState(17);
+			setState(18);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << INT) | (1L << BOOLEAN) | (1L << SYMBOL))) != 0)) {
 				{
+				{
 				setState(15);
-				_errHandler.sync(this);
-				switch (_input.LA(1)) {
-				case T__0:
-					{
-					setState(13);
-					list();
-					}
-					break;
-				case INT:
-				case BOOLEAN:
-				case SYMBOL:
-					{
-					setState(14);
-					literal();
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
+				entry();
 				}
 				}
-				setState(19);
+				setState(20);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(20);
+			setState(21);
 			match(T__1);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class EntryContext extends ParserRuleContext {
+		public LiteralContext literal() {
+			return getRuleContext(LiteralContext.class,0);
+		}
+		public ListContext list() {
+			return getRuleContext(ListContext.class,0);
+		}
+		public EntryContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_entry; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof fcpListener ) ((fcpListener)listener).enterEntry(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof fcpListener ) ((fcpListener)listener).exitEntry(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof fcpVisitor ) return ((fcpVisitor<? extends T>)visitor).visitEntry(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final EntryContext entry() throws RecognitionException {
+		EntryContext _localctx = new EntryContext(_ctx, getState());
+		enterRule(_localctx, 4, RULE_entry);
+		try {
+			setState(25);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case INT:
+			case BOOLEAN:
+			case SYMBOL:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(23);
+				literal();
+				}
+				break;
+			case T__0:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(24);
+				list();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -260,12 +302,12 @@ public class fcpParser extends Parser {
 
 	public final LiteralContext literal() throws RecognitionException {
 		LiteralContext _localctx = new LiteralContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_literal);
+		enterRule(_localctx, 6, RULE_literal);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(22);
+			setState(27);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << INT) | (1L << BOOLEAN) | (1L << SYMBOL))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -289,23 +331,26 @@ public class fcpParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0006\u0019\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
-		"\u0002\u0002\u0007\u0002\u0001\u0000\u0005\u0000\b\b\u0000\n\u0000\f\u0000"+
-		"\u000b\t\u0000\u0001\u0001\u0001\u0001\u0001\u0001\u0005\u0001\u0010\b"+
-		"\u0001\n\u0001\f\u0001\u0013\t\u0001\u0001\u0001\u0001\u0001\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0000\u0000\u0003\u0000\u0002\u0004\u0000\u0001"+
-		"\u0001\u0000\u0003\u0005\u0018\u0000\t\u0001\u0000\u0000\u0000\u0002\f"+
-		"\u0001\u0000\u0000\u0000\u0004\u0016\u0001\u0000\u0000\u0000\u0006\b\u0003"+
-		"\u0002\u0001\u0000\u0007\u0006\u0001\u0000\u0000\u0000\b\u000b\u0001\u0000"+
-		"\u0000\u0000\t\u0007\u0001\u0000\u0000\u0000\t\n\u0001\u0000\u0000\u0000"+
-		"\n\u0001\u0001\u0000\u0000\u0000\u000b\t\u0001\u0000\u0000\u0000\f\u0011"+
-		"\u0005\u0001\u0000\u0000\r\u0010\u0003\u0002\u0001\u0000\u000e\u0010\u0003"+
-		"\u0004\u0002\u0000\u000f\r\u0001\u0000\u0000\u0000\u000f\u000e\u0001\u0000"+
-		"\u0000\u0000\u0010\u0013\u0001\u0000\u0000\u0000\u0011\u000f\u0001\u0000"+
-		"\u0000\u0000\u0011\u0012\u0001\u0000\u0000\u0000\u0012\u0014\u0001\u0000"+
-		"\u0000\u0000\u0013\u0011\u0001\u0000\u0000\u0000\u0014\u0015\u0005\u0002"+
-		"\u0000\u0000\u0015\u0003\u0001\u0000\u0000\u0000\u0016\u0017\u0007\u0000"+
-		"\u0000\u0000\u0017\u0005\u0001\u0000\u0000\u0000\u0003\t\u000f\u0011";
+		"\u0004\u0001\u0006\u001e\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
+		"\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0001\u0000\u0005\u0000"+
+		"\n\b\u0000\n\u0000\f\u0000\r\t\u0000\u0001\u0001\u0001\u0001\u0005\u0001"+
+		"\u0011\b\u0001\n\u0001\f\u0001\u0014\t\u0001\u0001\u0001\u0001\u0001\u0001"+
+		"\u0002\u0001\u0002\u0003\u0002\u001a\b\u0002\u0001\u0003\u0001\u0003\u0001"+
+		"\u0003\u0000\u0000\u0004\u0000\u0002\u0004\u0006\u0000\u0001\u0001\u0000"+
+		"\u0003\u0005\u001c\u0000\u000b\u0001\u0000\u0000\u0000\u0002\u000e\u0001"+
+		"\u0000\u0000\u0000\u0004\u0019\u0001\u0000\u0000\u0000\u0006\u001b\u0001"+
+		"\u0000\u0000\u0000\b\n\u0003\u0002\u0001\u0000\t\b\u0001\u0000\u0000\u0000"+
+		"\n\r\u0001\u0000\u0000\u0000\u000b\t\u0001\u0000\u0000\u0000\u000b\f\u0001"+
+		"\u0000\u0000\u0000\f\u0001\u0001\u0000\u0000\u0000\r\u000b\u0001\u0000"+
+		"\u0000\u0000\u000e\u0012\u0005\u0001\u0000\u0000\u000f\u0011\u0003\u0004"+
+		"\u0002\u0000\u0010\u000f\u0001\u0000\u0000\u0000\u0011\u0014\u0001\u0000"+
+		"\u0000\u0000\u0012\u0010\u0001\u0000\u0000\u0000\u0012\u0013\u0001\u0000"+
+		"\u0000\u0000\u0013\u0015\u0001\u0000\u0000\u0000\u0014\u0012\u0001\u0000"+
+		"\u0000\u0000\u0015\u0016\u0005\u0002\u0000\u0000\u0016\u0003\u0001\u0000"+
+		"\u0000\u0000\u0017\u001a\u0003\u0006\u0003\u0000\u0018\u001a\u0003\u0002"+
+		"\u0001\u0000\u0019\u0017\u0001\u0000\u0000\u0000\u0019\u0018\u0001\u0000"+
+		"\u0000\u0000\u001a\u0005\u0001\u0000\u0000\u0000\u001b\u001c\u0007\u0000"+
+		"\u0000\u0000\u001c\u0007\u0001\u0000\u0000\u0000\u0003\u000b\u0012\u0019";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
