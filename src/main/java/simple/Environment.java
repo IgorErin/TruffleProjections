@@ -14,8 +14,16 @@ public class Environment {
 
     public Environment(Environment paren) {
         this.paren = paren;
+
         env.put("+", BuiltinFun.plusFun);
         env.put("-", BuiltinFun.minusFun);
+        env.put("print", BuiltinFun.printFun);
+        env.put(">", BuiltinFun.greaterFun);
+        env.put("<", BuiltinFun.lessFun);
+        env.put(">=", BuiltinFun.greaterOEFun);
+        env.put("<=", BuiltinFun.lessOEFun);
+        env.put("=", BuiltinFun.equalFun);
+        env.put("println", BuiltinFun.printlnFun);
     }
 
     public Object getValue(String name) {

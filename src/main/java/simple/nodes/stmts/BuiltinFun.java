@@ -14,8 +14,12 @@ public class BuiltinFun {
 
             int sum = 0;
 
-            for (Object number : args) {
-                sum += (int) number;
+            try {
+                for (Object number : args) {
+                    sum += (int) number;
+                }
+            } catch (Exception e) {
+                System.out.println("inside plusFun, exception: " + e.getMessage());
             }
 
             return sum;
@@ -37,6 +41,67 @@ public class BuiltinFun {
             }
 
             return sum;
+        }
+    };
+
+    static public Function printFun = new Function() {
+        @Override
+        public Object execute(List<Object> args) {
+            for (Object object : args) {
+                System.out.print(object+ " ");
+            }
+
+            return null;
+        }
+    };
+
+    static public Function printlnFun = new Function() {
+        @Override
+        public Object execute(List<Object> args) {
+            for (Object object : args) {
+                System.out.println(object+ " ");
+            }
+
+            return null;
+        }
+    };
+
+    static public Function lessFun = new Function() {
+
+        @Override
+        public Object execute(List<Object> args) {
+            return (int) args.get(0) < (int) args.get(1);
+        }
+    };
+
+    static public Function lessOEFun = new Function() {
+
+        @Override
+        public Object execute(List<Object> args) {
+            return (int) args.get(0) <= (int) args.get(1);
+        }
+    };
+
+    static public Function greaterOEFun = new Function() {
+
+        @Override
+        public Object execute(List<Object> args) {
+            return (int) args.get(0) >= (int) args.get(1);
+        }
+    };
+
+    static public Function greaterFun = new Function() {
+
+        @Override
+        public Object execute(List<Object> args) {
+            return (int) args.get(0) > (int) args.get(1);
+        }
+    };
+
+    static public Function equalFun = new Function() {
+        @Override
+        public Object execute(List<Object> args) {
+            return (int) args.get(0) == (int) args.get(1);
         }
     };
 }

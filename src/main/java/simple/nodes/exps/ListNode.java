@@ -4,8 +4,8 @@ import simple.Environment;
 import simple.nodes.Node;
 import simple.types.Function;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ListNode implements Node {
@@ -27,7 +27,8 @@ public class ListNode implements Node {
 
         try {
             Function lambda = (Function) nodeList.get(0).eval(env);
-            List<Object> args = new ArrayList<Object>();
+            List<Object> args = new LinkedList<Object>();
+
             for (Node i : nodeList.subList(1, nodeList.size())) {
                 args.add(i.eval(env));
             }
@@ -37,12 +38,5 @@ public class ListNode implements Node {
             System.out.println("in list eval -> " + e.getMessage());
             return null;
         }
-
-        /*List<Object> args = new ArrayList<Object>();
-        for (Node i : nodeList.subList(1, nodeList.size())) {
-            args.add(i.eval(env));
-        }
-
-        return lambda.execute(args);*/
     }
 }

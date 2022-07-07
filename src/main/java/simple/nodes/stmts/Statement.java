@@ -69,33 +69,27 @@ public abstract class Statement implements Node {
             List<String> names = new LinkedList<String>();
             Node body = nodeList.get(2);
 
+            for (Iterator<Node> it = formalParameters.iterator(); it.hasNext();) {
+                VarNode i = (VarNode) it.next();
+                names.add(i.name());
+                System.out.println("names:" + names);
+            }
+            System.out.println("args count in lambda:" + names.size());
+
+
             return new Function() {
                 @Override
                 public Object execute(List<Object> args) {
-                    for (Iterator<Node> it = formalParameters.iterator(); it.hasNext(); ) {
-                        VarNode i = (VarNode) it.next();
-                        names.add(i.name());
-                    }
-
                     if (names.size() != args.size()) {
                         throw new RuntimeException(
-                                "Wrong number of arguments, expected: " + names.size() + " but " + args.size() + "got"
+                                "Wrong number of arguments, expected: " + names.size() + " but " + args.size() + " got"
                         );
                     }
 
                     Environment newEnv = new Environment(env);
-                    Object result = null;
-
-                    for (String name : names) {
-                        newEnv.putValue(name, args);
+                    for (int i = 0; i < names.size(); i++) {
+                        newEnv.putValue(names.get(i), args.get(i));
                     }
-
-                    /*for (Iterator<Node> it = body.iterator(); it.hasNext(); ) {
-                        Node node = it.next();
-                        result = node.eval(newEnv);
-                    }
-
-                    return result;*/
 
                     return body.eval(newEnv);
                 }
@@ -104,7 +98,6 @@ public abstract class Statement implements Node {
     }
 
     public static Node check(List<Node> nodeList) {
-        System.out.println("lol");
         if (nodeList.isEmpty()) {
             return new ListNode(nodeList);
         } else {

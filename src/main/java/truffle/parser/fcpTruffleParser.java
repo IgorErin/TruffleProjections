@@ -1,6 +1,5 @@
 package truffle.parser;
 
-import com.sun.source.tree.EnhancedForLoopTree;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -79,8 +78,6 @@ public class fcpTruffleParser extends fcpBaseListener {
     }*/
 
     @Override public void exitLiteral(fcpParser.LiteralContext ctx) {
-        System.out.println(nodeListStack.size() + " --->>> " + ctx.getText());
-
         if (ctx.INT() != null) {
             int intNumber = Integer.parseInt(ctx.INT().getText());
             addNodeToCurrentList(new IntNode(intNumber));
@@ -103,7 +100,7 @@ public class fcpTruffleParser extends fcpBaseListener {
 
     public static void main(String[] args) {
         try {
-            CodePointCharStream input = CharStreams.fromString("(define a (+ 2 3)) (+ a )");
+            org.antlr.v4.runtime.CharStream input = CharStreams.fromFileName("src/main/test.fcp");
 
             fcpLexer lexer = new fcpLexer(input);
             fcpParser parser = new fcpParser(new CommonTokenStream(lexer));
@@ -114,15 +111,12 @@ public class fcpTruffleParser extends fcpBaseListener {
 
             List<Node> rootNodeList = truffleParser.getRootNodeList();
             Environment newEnv = new Environment();
-            Object result = null;
 
             for (Node node : rootNodeList) {
-                result = node.eval(newEnv);
+                node.eval(newEnv);
             }
-
-            System.out.println("output: " + result);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("excp: " + e.getMessage());
         }
     }
 }
