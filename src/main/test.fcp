@@ -1,3 +1,5 @@
-(define counter (lambda (n m) (if (< n m) (+ 1 (counter (+ 1 n) m)) (+ 1))))
+(define iter (lambda (count first second) (if (= count 0) (+ first) (+ (iter (- count 1) second (+ first second))))))
 
-(print (counter 0 3))
+(define fib (lambda (num) (+ (iter num 0 1))))
+
+(print (fib 8))
