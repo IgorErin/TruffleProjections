@@ -13,8 +13,8 @@ repositories {
 dependencies {
     implementation("org.antlr:antlr4:4.10.1")
 
-    implementation("org.graalvm.truffle:truffle-api:22.0.0.2")
-    annotationProcessor("org.graalvm.truffle:truffle-dsl-processor:22.0.0.2")
+    implementation("org.graalvm.truffle:truffle-api:22.1.0.1")
+    annotationProcessor("org.graalvm.truffle:truffle-dsl-processor:22.1.0.1")
 
     implementation(kotlin("stdlib"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")

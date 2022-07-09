@@ -1,5 +1,6 @@
 // Generated from /home/zzigor/Projects/TruffleProjections/src/main/java/truffle/parser/fcp.g4 by ANTLR 4.10.1
-package truffle.gen;
+package common;
+import common.fcpParser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**

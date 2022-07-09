@@ -72,10 +72,7 @@ public abstract class Statement implements Node {
             for (Iterator<Node> it = formalParameters.iterator(); it.hasNext();) {
                 VarNode i = (VarNode) it.next();
                 names.add(i.name());
-                System.out.println("names:" + names);
             }
-            System.out.println("args count in lambda:" + names.size());
-
 
             return new Function() {
                 @Override
@@ -103,15 +100,24 @@ public abstract class Statement implements Node {
         } else {
             String name = ((VarNode) nodeList.get(0)).name();
 
-            if (nodeList.size() == 3 && Objects.equals(name, "define")) {
+            if (nodeList.size() >= 3 && Objects.equals(name, "define")) {
                 return new DefineStatement(nodeList);
-            } else if (nodeList.size() == 4 && Objects.equals(name, "if")) {
+            } else if (nodeList.size() >= 4 && Objects.equals(name, "if")) {
                 return new IfStatement(nodeList);
-            } else if (nodeList.size() == 3 && Objects.equals(name, "lambda")) {
+            } else if (nodeList.size() >= 3 && Objects.equals(name, "lambda")) {
                 return new LambdaStatement(nodeList);
             } else {
                 return new ListNode(nodeList);
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        if (another instanceof Statement ifStmt){
+            return ifStmt.nodeList.equals(this.nodeList);
+        }
+
+        return false;
     }
 }
