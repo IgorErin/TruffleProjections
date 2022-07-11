@@ -114,7 +114,7 @@ public abstract class Statement implements Node {
 
     @Override
     public boolean equals(Object another) {
-        if (another instanceof Statement ifStmt){
+        if (another instanceof Statement ifStmt) {
             return ifStmt.nodeList.equals(this.nodeList);
         }
 
