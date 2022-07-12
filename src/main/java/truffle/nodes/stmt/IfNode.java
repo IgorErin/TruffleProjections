@@ -5,7 +5,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import truffle.nodes.FCPNode;
 
-public class IfNode extends FCPNode {
+public class IfNode extends FCPNode { //TODO how dsl generate this ?
     @Child FCPNode condNode;
     @Child FCPNode ifNode;
     @Child FCPNode elseNode;

@@ -9,7 +9,7 @@ import truffle.nodes.FCPNode;
 
 @NodeChild("valueNode")
 @NodeField(name = "slot", type = int.class)
-public abstract class DefNode extends FCPNode {
+public abstract class DefNode extends FCPNode { //TODO how dsl generate this ?
     protected abstract int getSlot();
 
     @Specialization(guards = "isIntOrIllegal(frame)")
