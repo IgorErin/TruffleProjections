@@ -3,7 +3,7 @@ package truffle.nodes.exps;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import truffle.nodes.FCPNode;
 
-public class StringNode extends FCPNode {
+ class StringNode extends FCPNode {
     private final String value;
 
     public StringNode(String value) {
