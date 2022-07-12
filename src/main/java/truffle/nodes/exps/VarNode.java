@@ -1,17 +1,18 @@
-package truffle.nodes.stmt;
+package truffle.nodes.exps;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import truffle.nodes.FCPNode;
 
 @NodeField(name = "slot", type = int.class)
-public abstract class VarNode {
+public abstract class VarNode extends FCPNode {
     protected abstract int getSlot();
 
     @Specialization(guards = "frame.isInt(getSlot())")
-    protected int readInt(VirtualFrame frame) throws UnexpectedResultException {
+    protected int readInt(VirtualFrame frame) {
         return frame.getInt(getSlot());
     }
 
@@ -20,7 +21,7 @@ public abstract class VarNode {
         return frame.getBoolean(getSlot());
     }
 
-    @Specialization(replaces = {"readInt, readLong"})
+    @Specialization(replaces = {"readInt", "readBoolean"})
     protected Object readObject(VirtualFrame frame) {
         if (!frame.isObject(getSlot())) {
             CompilerDirectives.transferToInterpreter();
