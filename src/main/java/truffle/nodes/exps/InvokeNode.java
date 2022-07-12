@@ -13,7 +13,7 @@ public class InvokeNode extends FCPNode {
     @Children private final FCPNode[] argNodes;
     @Child private IndirectCallNode callNode;
 
-    public InvokeNode(FCPNode funNode, FCPNode[] argNodes, IndirectCallNode callNode) {
+    public InvokeNode(FCPNode funNode, FCPNode[] argNodes, IndirectCallNode callNode) {// TODO mb direct call ?
         this.funNode = funNode;
         this.argNodes = argNodes;
         this.callNode = callNode;
