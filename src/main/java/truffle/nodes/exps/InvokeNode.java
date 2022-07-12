@@ -1,6 +1,7 @@
 package truffle.nodes.exps;
 
 import com.oracle.truffle.api.CompilerAsserts;
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
@@ -10,18 +11,18 @@ import truffle.types.Function;
 
 public class InvokeNode extends FCPNode {
     @Child private FCPNode funNode;
-    @Children private final FCPNode[] argNodes;
+    @Children private FCPNode[] argNodes;
     @Child private IndirectCallNode callNode;
 
-    public InvokeNode(FCPNode funNode, FCPNode[] argNodes, IndirectCallNode callNode) {// TODO mb direct call ?
+    public InvokeNode(FCPNode funNode, FCPNode[] argNodes) {// TODO mb direct call ?
         this.funNode = funNode;
         this.argNodes = argNodes;
-        this.callNode = callNode;
+        this.callNode = Truffle.getRuntime().createIndirectCallNode();
     }
 
     @ExplodeLoop
     @Override
-    public Object executeGeneric(VirtualFrame frame) { //TODO()
+    public Object executeGeneric(VirtualFrame frame) {
         Function fun = getFun(frame);
 
         CompilerAsserts.compilationConstant(argNodes.length);

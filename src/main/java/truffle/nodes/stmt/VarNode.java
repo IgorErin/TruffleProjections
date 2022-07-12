@@ -1,4 +1,4 @@
-package truffle.nodes;
+package truffle.nodes.stmt;
 
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.NodeField;
@@ -7,7 +7,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
 @NodeField(name = "slot", type = int.class)
-public abstract class ReadVarNode {
+public abstract class VarNode {
     protected abstract int getSlot();
 
     @Specialization(guards = "frame.isInt(getSlot())")
