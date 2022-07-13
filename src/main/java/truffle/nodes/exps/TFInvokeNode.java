@@ -32,7 +32,7 @@ public class TFInvokeNode extends TFNode {
             argValues[i] = argNodes[i].executeGeneric(frame);
         }
 
-        return callNode.call(fun.callTarget, argValues, frame);
+        return callNode.call(fun.callTarget, frame, argValues);
     }
 
     private TFFunction getFun(VirtualFrame frame) {
