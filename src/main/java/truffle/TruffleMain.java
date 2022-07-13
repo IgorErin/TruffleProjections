@@ -26,7 +26,7 @@ public class TruffleMain {
         LexicalScope newScope = new LexicalScope(null);
 
         System.out.println(newBuilder);
-        topFrame(newBuilder);
+        //topFrame(newBuilder);
 
         for (int index = 0; index < nodeList.size(); index++) {
             nodes[index] = nodeList.get(index).convert(newBuilder, newScope);
@@ -39,7 +39,7 @@ public class TruffleMain {
         directCall.call(array);
     }
 
-    static private Frame topFrame(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
+    /*static private Frame topFrame(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
         Frame frame = Truffle.getRuntime().createVirtualFrame(new Object[] {}, descriptorBuilder.build());
 
         frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "+", "+"), TODO());
@@ -49,7 +49,7 @@ public class TruffleMain {
         frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "println", "+"), TODO());
 
         return frame;
-    }
+    }*/
 
     static private void putSlot(
             FrameDescriptor.Builder descriptorBuilder,

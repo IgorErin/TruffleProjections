@@ -10,7 +10,7 @@ import truffle.nodes.stmt.TFDefNodeGen;
 public class TFRootNode extends RootNode {
     @Children private final TFNode[] nodes;
 
-    public TFRootNode(TFNode[] nodes, FrameDescriptor descriptor) { // TODO why descriptor ???
+    public TFRootNode(TFNode[] nodes, FrameDescriptor descriptor) {
         super(null, descriptor);
         this.nodes = nodes;
     }

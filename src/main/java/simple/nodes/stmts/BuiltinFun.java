@@ -60,6 +60,8 @@ public class BuiltinFun {
     static public Function printlnFun = new Function() {
         @Override
         public Object execute(List<Object> args) {
+            System.out.print("Printed in fcp lang: ");
+
             for (Object object : args) {
                 System.out.println(object+ " ");
             }

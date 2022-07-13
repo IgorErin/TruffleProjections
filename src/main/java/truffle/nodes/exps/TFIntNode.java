@@ -16,7 +16,7 @@ public class TFIntNode extends TFNode {
     }
 
     @Override
-    public long executeInt(VirtualFrame frame) {
+    public long executeLong(VirtualFrame frame) {
         return this.value;
     }
 

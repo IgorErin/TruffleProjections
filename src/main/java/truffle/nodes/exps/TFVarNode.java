@@ -11,8 +11,8 @@ import truffle.nodes.TFNode;
 public abstract class TFVarNode extends TFNode {
     protected abstract int getSlot();
 
-    @Specialization(guards = "frame.isInt(getSlot())")
-    protected int readInt(VirtualFrame frame) {
+    @Specialization(guards = "frame.isLong(getSlot())")
+    protected int readLong(VirtualFrame frame) {
         return frame.getInt(getSlot());
     }
 
@@ -21,7 +21,7 @@ public abstract class TFVarNode extends TFNode {
         return frame.getBoolean(getSlot());
     }
 
-    @Specialization(replaces = {"readInt", "readBoolean"})
+    @Specialization(replaces = {"readLong", "readBoolean"})
     protected Object readObject(VirtualFrame frame) {
         if (!frame.isObject(getSlot())) {
             CompilerDirectives.transferToInterpreter();

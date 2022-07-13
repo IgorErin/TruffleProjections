@@ -13,8 +13,8 @@ public abstract class TFNode extends Node {
         return TypesGen.expectBoolean(executeGeneric(frame));
     }
 
-    public long executeInt(VirtualFrame frame) throws UnexpectedResultException {
-        return TypesGen.expectInteger(executeGeneric(frame));
+    public long executeLong(VirtualFrame frame) throws UnexpectedResultException {
+        return TypesGen.expectLong(executeGeneric(frame));
     }
 
     public String executeString(VirtualFrame frame) throws UnexpectedResultException {

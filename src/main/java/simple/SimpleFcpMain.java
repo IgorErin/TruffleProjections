@@ -19,6 +19,4 @@ public class SimpleFcpMain {
             System.out.println("Eval exception: " + e.getMessage());
         }
     }
-
-
 }
