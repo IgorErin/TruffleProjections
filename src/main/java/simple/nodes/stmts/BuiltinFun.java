@@ -12,11 +12,11 @@ public class BuiltinFun {
                 throw new RuntimeException("Sum not def for zero args");
             }
 
-            int sum = 0;
+            long sum = 0;
 
             try {
                 for (Object number : args) {
-                    sum += (int) number;
+                    sum += (long) number;
                 }
             } catch (Exception e) {
                 System.out.println("inside plusFun, exception: " + e.getMessage());
@@ -33,11 +33,11 @@ public class BuiltinFun {
                 throw new RuntimeException("subtraction not def for zero args");
             }
 
-            int sum = (int) args.get(0);
+            long sum = (long) args.get(0);
             List<Object> subList = args.subList(1, args.size());
 
             for (Object number : subList) {
-                sum -= (int) number;
+                sum -= (long) number;
             }
 
             return sum;
@@ -72,7 +72,7 @@ public class BuiltinFun {
 
         @Override
         public Object execute(List<Object> args) {
-            return (int) args.get(0) < (int) args.get(1);
+            return (long) args.get(0) < (long) args.get(1);
         }
     };
 
@@ -80,7 +80,7 @@ public class BuiltinFun {
 
         @Override
         public Object execute(List<Object> args) {
-            return (int) args.get(0) <= (int) args.get(1);
+            return (long) args.get(0) <= (long) args.get(1);
         }
     };
 
@@ -88,7 +88,7 @@ public class BuiltinFun {
 
         @Override
         public Object execute(List<Object> args) {
-            return (int) args.get(0) >= (int) args.get(1);
+            return (long) args.get(0) >= (long) args.get(1);
         }
     };
 
@@ -96,14 +96,14 @@ public class BuiltinFun {
 
         @Override
         public Object execute(List<Object> args) {
-            return (int) args.get(0) > (int) args.get(1);
+            return (long) args.get(0) > (long) args.get(1);
         }
     };
 
     static public Function equalFun = new Function() {
         @Override
         public Object execute(List<Object> args) {
-            return (int) args.get(0) == (int) args.get(1);
+            return (long) args.get(0) == (long) args.get(1);
         }
     };
 }

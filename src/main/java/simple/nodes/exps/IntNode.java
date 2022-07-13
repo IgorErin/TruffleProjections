@@ -7,7 +7,7 @@ import truffle.nodes.TFNode;
 import truffle.nodes.exps.TFIntNode;
 import truffle.parser.LexicalScope;
 
-public record IntNode(int number) implements Node {
+public record IntNode(long number) implements Node {
     @Override
     public Object eval(Environment env) {
         return number;

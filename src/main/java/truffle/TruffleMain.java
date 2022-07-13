@@ -13,6 +13,7 @@ import truffle.nodes.TFRootNode;
 import truffle.parser.LexicalScope;
 import truffle.types.TFFunction;
 
+import javax.management.Descriptor;
 import java.util.List;
 
 public class TruffleMain {
@@ -38,10 +39,26 @@ public class TruffleMain {
         directCall.call(array);
     }
 
-    static private Frame topFrame(FrameDescriptor.Builder descriptorBuilder) {
+    static private Frame topFrame(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
         Frame frame = Truffle.getRuntime().createVirtualFrame(new Object[] {}, descriptorBuilder.build());
 
-        return null;
+        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "+", "+"), TODO());
+        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "-", "+"), TODO());
+        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "*", "+"), TODO());
+        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "print", "+"), TODO());
+        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "println", "+"), TODO());
+
+        return frame;
     }
 
+    static private void putSlot(
+            FrameDescriptor.Builder descriptorBuilder,
+            Frame frame,
+            LexicalScope scope,
+            Object function
+    ) {
+        int slot = descriptorBuilder.addSlot(FrameSlotKind.Object, "+", "+");
+        scope.locals.put("+", slot);
+        frame.setObject(slot, function);
+    }
 }
