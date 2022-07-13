@@ -6,15 +6,15 @@ import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.IndirectCallNode;
-import truffle.nodes.FCPNode;
+import truffle.nodes.TFNode;
 import truffle.types.Function;
 
-public class InvokeNode extends FCPNode {
-    @Child private FCPNode funNode;
-    @Children private FCPNode[] argNodes;
+public class TFInvokeNode extends TFNode {
+    @Child private TFNode funNode;
+    @Children private TFNode[] argNodes;
     @Child private IndirectCallNode callNode;
 
-    public InvokeNode(FCPNode funNode, FCPNode[] argNodes) {// TODO mb direct call ?
+    public TFInvokeNode(TFNode funNode, TFNode[] argNodes) {// TODO mb direct call ?
         this.funNode = funNode;
         this.argNodes = argNodes;
         this.callNode = Truffle.getRuntime().createIndirectCallNode();
@@ -39,7 +39,7 @@ public class InvokeNode extends FCPNode {
         try {
             return funNode.executeFunction(frame);
         } catch (Exception e) {
-            throw new UnsupportedSpecializationException(this, new FCPNode[] {funNode}, e);
+            throw new UnsupportedSpecializationException(this, new TFNode[] {funNode}, e);
         }
     }
 }

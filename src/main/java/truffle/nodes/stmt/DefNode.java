@@ -5,11 +5,11 @@ import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import truffle.nodes.FCPNode;
+import truffle.nodes.TFNode;
 
 @NodeChild("valueNode")
 @NodeField(name = "slot", type = int.class)
-public abstract class DefNode extends FCPNode { //TODO how dsl generate this ?
+public abstract class DefNode extends TFNode { //TODO how dsl generate this ?
     protected abstract int getSlot();
 
     @Specialization(guards = "isIntOrIllegal(frame)")

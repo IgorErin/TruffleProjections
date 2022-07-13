@@ -1,12 +1,12 @@
 package truffle.nodes.exps;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
-import truffle.nodes.FCPNode;
+import truffle.nodes.TFNode;
 
- class StringNode extends FCPNode {
-    private final String value;
+public class TFIntNode extends TFNode {
+    private final int value;
 
-    public StringNode(String value) {
+    public TFIntNode(int value) {
         this.value = value;
     }
 
@@ -15,14 +15,13 @@ import truffle.nodes.FCPNode;
         return this.value;
     }
 
-
     @Override
-    public String executeString(VirtualFrame frame) {
+    public int executeInt(VirtualFrame frame) {
         return this.value;
     }
 
     @Override
     public String toString() {
-        return "String node, value = " + this.value;
+        return "Int node, value = " + this.value;
     }
 }

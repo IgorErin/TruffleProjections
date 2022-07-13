@@ -3,14 +3,14 @@ package truffle.nodes.stmt;
 import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import truffle.nodes.FCPNode;
+import truffle.nodes.TFNode;
 
-public class IfNode extends FCPNode { //TODO how dsl generate this ?
-    @Child FCPNode condNode;
-    @Child FCPNode ifNode;
-    @Child FCPNode elseNode;
+public class IfNode extends TFNode { //TODO how dsl generate this ?
+    @Child TFNode condNode;
+    @Child TFNode ifNode;
+    @Child TFNode elseNode;
 
-    public IfNode(FCPNode condNode, FCPNode ifNode, FCPNode elseNode) {
+    public IfNode(TFNode condNode, TFNode ifNode, TFNode elseNode) {
         this.condNode = condNode;
         this.ifNode = ifNode;
         this.elseNode = elseNode;
@@ -31,7 +31,7 @@ public class IfNode extends FCPNode { //TODO how dsl generate this ?
         try {
             return condNode.executeBoolean(frame);
         } catch (UnexpectedResultException e) {
-            throw new UnsupportedSpecializationException(this, new FCPNode[] {condNode}, e);
+            throw new UnsupportedSpecializationException(this, new TFNode[] {condNode}, e);
         }
     }
 }

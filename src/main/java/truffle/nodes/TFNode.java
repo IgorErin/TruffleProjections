@@ -6,7 +6,7 @@ import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import truffle.types.Function;
 import truffle.types.TypesGen;
 
-public abstract class FCPNode extends Node {
+public abstract class TFNode extends Node {
     public abstract Object executeGeneric(VirtualFrame frame);
 
     public boolean executeBoolean(VirtualFrame frame) throws UnexpectedResultException {

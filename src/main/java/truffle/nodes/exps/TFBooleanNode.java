@@ -2,12 +2,12 @@ package truffle.nodes.exps;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import truffle.nodes.FCPNode;
+import truffle.nodes.TFNode;
 
-public class BooleanNode extends FCPNode {
+public class TFBooleanNode extends TFNode {
     private final boolean value;
 
-    public BooleanNode(boolean value) {
+    public TFBooleanNode(boolean value) {
         this.value = value;
     }
 

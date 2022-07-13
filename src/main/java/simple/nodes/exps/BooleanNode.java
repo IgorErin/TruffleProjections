@@ -1,7 +1,10 @@
 package simple.nodes.exps;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import simple.Environment;
 import simple.nodes.Node;
+import truffle.nodes.TFNode;
+import truffle.parser.LexicalScope;
 
 public record BooleanNode(boolean value) implements Node {
 
@@ -17,5 +20,10 @@ public record BooleanNode(boolean value) implements Node {
         }
 
         return false;
+    }
+
+    @Override
+    public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
+        return null;
     }
 }

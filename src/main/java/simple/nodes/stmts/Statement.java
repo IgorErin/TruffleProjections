@@ -1,10 +1,13 @@
 package simple.nodes.stmts;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import simple.Environment;
 import simple.nodes.Node;
 import simple.nodes.exps.ListNode;
 import simple.nodes.exps.VarNode;
 import simple.types.Function;
+import truffle.nodes.TFNode;
+import truffle.parser.LexicalScope;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,6 +43,11 @@ public abstract class Statement implements Node {
 
             return ifNode.eval(env);
         }
+
+        @Override
+        public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
+            return null;
+        }
     }
 
     private static class DefineStatement extends Statement {
@@ -54,6 +62,11 @@ public abstract class Statement implements Node {
 
             env.putValue(defName, defBody.eval(env));
 
+            return null;
+        }
+
+        @Override
+        public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
             return null;
         }
     }
@@ -91,6 +104,11 @@ public abstract class Statement implements Node {
                     return body.eval(newEnv);
                 }
             };
+        }
+
+        @Override
+        public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
+            return null;
         }
     }
 

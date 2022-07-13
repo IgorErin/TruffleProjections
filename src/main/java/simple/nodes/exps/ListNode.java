@@ -1,8 +1,11 @@
 package simple.nodes.exps;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import simple.Environment;
 import simple.nodes.Node;
 import simple.types.Function;
+import truffle.nodes.TFNode;
+import truffle.parser.LexicalScope;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -44,6 +47,11 @@ public class ListNode implements Node {
         }
 
         return lambda.execute(args);
+    }
+
+    @Override
+    public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
+        return null;
     }
 
     @Override

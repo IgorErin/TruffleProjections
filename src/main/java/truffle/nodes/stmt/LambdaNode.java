@@ -5,11 +5,11 @@ import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
-import truffle.nodes.FCPNode;
+import truffle.nodes.TFNode;
 import truffle.types.Function;
 
 @NodeField(name = "fun", type = Function.class)
-public abstract class LambdaNode extends FCPNode { //TODO how dsl generate this ?
+public abstract class LambdaNode extends TFNode { //TODO how dsl generate this ?
     protected abstract Function getFun();
 
     @Specialization(guards = "isScoped()")

@@ -5,7 +5,7 @@ import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.nodes.RootNode;
-import truffle.nodes.FCPNode;
+import truffle.nodes.TFNode;
 import truffle.nodes.FCPRootNode;
 
 public class Function {
@@ -24,7 +24,7 @@ public class Function {
         return this.scope;
     }
 
-    public static Function createFunction(int[] slots, FrameDescriptor descriptor, FCPNode[] nodes) {
+    public static Function createFunction(int[] slots, FrameDescriptor descriptor, TFNode[] nodes) {
         RootNode newRootNode = FCPRootNode.createRootNode(slots, descriptor, nodes);
 
         return new Function(Truffle.getRuntime().createCallTarget(newRootNode));

@@ -4,11 +4,11 @@ import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import truffle.nodes.FCPNode;
+import truffle.nodes.TFNode;
+
 
 @NodeField(name = "slot", type = int.class)
-public abstract class VarNode extends FCPNode {
+public abstract class TFVarNode extends TFNode {
     protected abstract int getSlot();
 
     @Specialization(guards = "frame.isInt(getSlot())")

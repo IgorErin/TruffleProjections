@@ -2,7 +2,7 @@ package truffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class ReadArgNode extends FCPNode {
+public class ReadArgNode extends TFNode {
     public final int index;
 
     public ReadArgNode(int index) {

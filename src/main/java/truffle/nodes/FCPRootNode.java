@@ -8,9 +8,9 @@ import com.oracle.truffle.api.nodes.RootNode;
 import truffle.nodes.stmt.DefNodeGen;
 
 public class FCPRootNode extends RootNode {
-    @Children private final FCPNode[] nodes;
+    @Children private final TFNode[] nodes;
 
-    public FCPRootNode(FCPNode[] nodes, FrameDescriptor descriptor) { // TODO why descriptor ???
+    public FCPRootNode(TFNode[] nodes, FrameDescriptor descriptor) { // TODO why descriptor ???
         super(null, descriptor);
         this.nodes = nodes;
     }
@@ -30,8 +30,8 @@ public class FCPRootNode extends RootNode {
         return nodes[length - 1].executeGeneric(frame);
     }
 
-    public static RootNode createRootNode(int[] slots, FrameDescriptor descriptor, FCPNode[] nodes) {
-        FCPNode[] bodyNodes = new FCPNode[slots.length + nodes.length];
+    public static RootNode createRootNode(int[] slots, FrameDescriptor descriptor, TFNode[] nodes) {
+        TFNode[] bodyNodes = new TFNode[slots.length + nodes.length];
 
         for (int i = 0; i < slots.length; i++) {
             bodyNodes[i] = DefNodeGen.create(new ReadArgNode(i), slots[i]);
