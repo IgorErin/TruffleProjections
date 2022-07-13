@@ -9,7 +9,7 @@ import truffle.nodes.TFNode;
 
 @NodeChild("valueNode")
 @NodeField(name = "slot", type = int.class)
-public abstract class TFDefNode extends TFNode { //TODO how dsl generate this ? redef ?
+public abstract class TFDefNode extends TFNode { //TODO how dsl generate this ?
     protected abstract int getSlot();
 
     @Specialization(guards = "isIntOrIllegal(frame)")

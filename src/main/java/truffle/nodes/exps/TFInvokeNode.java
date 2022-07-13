@@ -32,13 +32,14 @@ public class TFInvokeNode extends TFNode {
             argValues[i] = argNodes[i].executeGeneric(frame);
         }
 
-        return callNode.call(fun.callTarget, frame, argValues);
+        return callNode.call(fun.callTarget, argValues, frame);
     }
 
     private TFFunction getFun(VirtualFrame frame) {
         try {
             return funNode.executeFunction(frame);
         } catch (Exception e) {
+            System.out.println(funNode.executeGeneric(frame));
             throw new UnsupportedSpecializationException(this, new TFNode[] {funNode}, e);
         }
     }

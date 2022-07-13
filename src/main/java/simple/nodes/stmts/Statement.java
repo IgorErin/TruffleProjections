@@ -14,10 +14,7 @@ import truffle.nodes.stmt.TFLambdaNodeGen;
 import truffle.parser.LexicalScope;
 import truffle.types.TFFunction;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public abstract class Statement implements Node {
     protected final List<Node> nodeList;
@@ -91,11 +88,11 @@ public abstract class Statement implements Node {
 
     private static class LambdaStatement extends Statement {
         final List<String> formalParameters;
-        final Node bodyNode;
+        final Node[] bodyNodes;
         private LambdaStatement(List<Node> nodeList) {
             super(nodeList);
             this.formalParameters = getFormalNames((ListNode) nodeList.get(1));
-            this.bodyNode = nodeList.get(2);
+            this.bodyNodes = nodeList.subList(2, nodeList.size()).toArray(new Node[0]);
         }
 
         @Override
@@ -115,7 +112,16 @@ public abstract class Statement implements Node {
                         newEnv.putValue(formalParameters.get(i), args.get(i));
                     }
 
-                    return bodyNode.eval(newEnv);
+                    int length = bodyNodes.length;
+
+                    for (int index = 0; index < length - 1; index++) {
+                        bodyNodes[index].eval(newEnv);
+                    }
+                    try {
+                        return bodyNodes[length - 1].eval(newEnv);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Empty lambda body");
+                    }
                 }
             };
         }
@@ -133,7 +139,11 @@ public abstract class Statement implements Node {
                 argSlots[index] = slot;
             }
 
-            TFNode tFBodyNode = bodyNode.convert(descriptorBuilder, newScope);
+            TFNode[] tFBodyNode = new TFNode[bodyNodes.length];
+            for (int index = 0; index < bodyNodes.length; index++) {
+                tFBodyNode[index] = bodyNodes[index].convert(descriptorBuilder, newScope);
+            }
+
             TFFunction fun = TFFunction.createFunction(argSlots, descriptorBuilder.build(), tFBodyNode);
 
             return TFLambdaNodeGen.create(fun);

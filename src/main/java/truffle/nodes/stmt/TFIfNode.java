@@ -24,7 +24,7 @@ public class TFIfNode extends TFNode { //TODO how dsl generate this ?
             return ifNode.executeGeneric(frame);
         }
 
-        return elseNode;
+        return elseNode.executeGeneric(frame);
     }
 
     private boolean getResult(VirtualFrame frame) {

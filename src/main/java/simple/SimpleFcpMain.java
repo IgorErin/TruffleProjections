@@ -8,7 +8,7 @@ public class SimpleFcpMain {
     static public void main(String[] args) {
         SimpleFcpParser newParser = new SimpleFcpParser();
 
-        List<Node> nodeList = newParser.getAst("src/test/java/printTest.fcp");
+        List<Node> nodeList = newParser.getAst("src/test/java/defTest.fcp");
         Environment env = new Environment();
 
         try {
@@ -19,4 +19,6 @@ public class SimpleFcpMain {
             System.out.println("Eval exception: " + e.getMessage());
         }
     }
+
+
 }

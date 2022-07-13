@@ -8,7 +8,6 @@ import truffle.nodes.exps.TFBooleanNode;
 import truffle.parser.LexicalScope;
 
 public record BooleanNode(boolean value) implements Node {
-
     @Override
     public Object eval(Environment env) {
         return value;

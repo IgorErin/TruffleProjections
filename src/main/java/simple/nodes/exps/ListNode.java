@@ -82,11 +82,11 @@ public class ListNode implements Node {
         }
 
         TFNode funNode = nodeList.get(0).convert(descriptorBuilder, scope);
-        TFNode[] args = new TFNode[nodeList.size() - 1];
+        TFNode[] args = new TFNode[nodeList.size()];
 
         if (nodeList.size() > 1) {
             for (int index = 1; index < nodeList.size(); index++) {
-                args[index] = nodeList.get(index).convert(descriptorBuilder, scope); //TODO Work ?
+                args[index] = nodeList.get(index).convert(descriptorBuilder, scope); //TODO Work ? no !
             }
         }
 
