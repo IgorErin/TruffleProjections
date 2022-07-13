@@ -12,9 +12,7 @@ import truffle.nodes.TFNode;
 import truffle.nodes.TFRootNode;
 import truffle.nodes.builtin.Builtin;
 import truffle.parser.LexicalScope;
-import truffle.types.TFFunction;
 
-import javax.management.Descriptor;
 import java.util.List;
 
 public class TruffleMain {
