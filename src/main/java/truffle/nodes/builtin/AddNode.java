@@ -1,19 +1,24 @@
 package truffle.nodes.builtin;
 
-import com.oracle.truffle.api.dsl.Specialization;
+import com.oracle.truffle.api.frame.VirtualFrame;
+import truffle.nodes.TFNode;
 
-public abstract class AddNode extends TFBinNode {
-    @Specialization
-    protected long addLong(long left, long right) {
-        try {
-            return Math.addExact(left, right);
-        } catch (Exception e) {
-            throw new RuntimeException("Long overflow in addNode");
+public class AddNode extends TFNode {
+    @Override
+    public Object executeGeneric(VirtualFrame frame) {
+        Object[] args = frame.getArguments();
+        long sum = 0;
+
+        if (args.length > 1) {
+            try {
+                for (int index = 1; index < args.length; index++) {
+                    sum = Math.addExact(sum, (long) args[index]);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("inside AddNode, " + e.getMessage());
+            }
         }
-    }
 
-    @Specialization
-    protected boolean addBoolean(boolean left, boolean right) {
-        return left || right;
+        return sum;
     }
 }

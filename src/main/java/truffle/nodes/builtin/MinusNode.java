@@ -1,19 +1,23 @@
 package truffle.nodes.builtin;
 
-import com.oracle.truffle.api.dsl.Specialization;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
-public abstract class MinusNode extends TFBinNode {
-    @Specialization
-    protected long minusLong(long left, long right) {
-        try {
-            return Math.subtractExact(left, right);
-        } catch (Exception e) {
-            throw new RuntimeException("Long overflow in addNode");
+public class MinusNode extends TFBinNode {
+    @Override
+    public Object executeGeneric(VirtualFrame frame) {
+        Object[] args = frame.getArguments();
+        long sum = 0;
+
+        if (args.length > 1) {
+            try {
+                for (int index = 1; index < args.length; index++) {
+                    sum = Math.subtractExact(sum, (long) args[index]);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("inside MinusNode, " + e.getMessage());
+            }
         }
-    }
 
-    @Specialization
-    protected boolean minusBoolean(boolean left, boolean right) {
-        return left || right;
+        return sum;
     }
 }

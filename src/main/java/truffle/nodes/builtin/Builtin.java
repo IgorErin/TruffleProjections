@@ -6,36 +6,32 @@ import truffle.nodes.TFRootNode;
 import truffle.types.TFFunction;
 
 public class Builtin {
-    static TFFunction getPlusFun(TFNode left, TFNode right, FrameDescriptor descriptor) {
-        AddNode newAddNode = AddNodeGen.create(left, right);
-        TFRootNode rootNode = new TFRootNode(new TFNode[] {newAddNode}, descriptor);
+    public static TFFunction getPlusFun(FrameDescriptor descriptor) {
+        TFRootNode rootNode = new TFRootNode(new TFNode[] {new AddNode()}, descriptor);
 
         return new TFFunction(rootNode.getCallTarget());
     }
 
-    static TFFunction getMinusFun(TFNode left, TFNode right, FrameDescriptor descriptor) {
-        MinusNode newMinNode = MinusNodeGen.create(left, right);
-        TFRootNode rootNode = new TFRootNode(new TFNode[] {newMinNode}, descriptor);
+    public static TFFunction getMinusFun(FrameDescriptor descriptor) {
+        TFRootNode rootNode = new TFRootNode(new TFNode[] {new MinusNode()}, descriptor);
 
         return new TFFunction(rootNode.getCallTarget());
     }
 
-    static TFFunction getMulFun(TFNode left, TFNode right, FrameDescriptor descriptor) {
-        MulNode newMulNode = MulNodeGen.create(left, right);
-        TFRootNode rootNode = new TFRootNode(new TFNode[] {newMulNode}, descriptor);
+    public static TFFunction getMulFun(FrameDescriptor descriptor) {
+        TFRootNode rootNode = new TFRootNode(new TFNode[] {new MulNode()}, descriptor);
 
         return new TFFunction(rootNode.getCallTarget());
     }
 
-    static TFFunction getTimeFun(FrameDescriptor descriptor) {
+    public static TFFunction getTimeFun(FrameDescriptor descriptor) {
         TFRootNode rootNode = new TFRootNode(new TFNode[] {new TimeNode()}, descriptor);
 
         return new TFFunction(rootNode.getCallTarget());
     }
 
-    static TFFunction getPrintFun(TFNode node, FrameDescriptor descriptor) {
-        PrintNode printNode = PrintNodeGen.create(node);
-        TFRootNode rootNode = new TFRootNode(new TFNode[] {printNode}, descriptor);
+    public static TFFunction getPrintFun(FrameDescriptor descriptor) {
+        TFRootNode rootNode = new TFRootNode(new TFNode[] {new PrintNode()}, descriptor);
 
         return new TFFunction(rootNode.getCallTarget());
     }

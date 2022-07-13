@@ -10,6 +10,7 @@ import simple.SimpleFcpParser;
 import simple.nodes.Node;
 import truffle.nodes.TFNode;
 import truffle.nodes.TFRootNode;
+import truffle.nodes.builtin.Builtin;
 import truffle.parser.LexicalScope;
 import truffle.types.TFFunction;
 
@@ -25,40 +26,38 @@ public class TruffleMain {
         FrameDescriptor.Builder newBuilder = FrameDescriptor.newBuilder();
         LexicalScope newScope = new LexicalScope(null);
 
-        System.out.println(newBuilder);
-        //topFrame(newBuilder);
-
         for (int index = 0; index < nodeList.size(); index++) {
             nodes[index] = nodeList.get(index).convert(newBuilder, newScope);
         }
 
         RootNode rootNode = new TFRootNode(nodes, newBuilder.build());
         DirectCallNode directCall = Truffle.getRuntime().createDirectCallNode(rootNode.getCallTarget());
+        Frame frame = topFrame(newBuilder, newScope);
 
-        int[] array = new int[] {1, 2, 3};
-        directCall.call(array);
+        directCall.call(frame);
     }
 
-    /*static private Frame topFrame(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
+    static private Frame topFrame(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
         Frame frame = Truffle.getRuntime().createVirtualFrame(new Object[] {}, descriptorBuilder.build());
 
-        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "+", "+"), TODO());
-        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "-", "+"), TODO());
-        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "*", "+"), TODO());
-        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "print", "+"), TODO());
-        frame.setObject(descriptorBuilder.addSlot(FrameSlotKind.Object, "println", "+"), TODO());
+        putSlot(descriptorBuilder, frame, scope, Builtin.getPlusFun(descriptorBuilder.build()), "+");
+        putSlot(descriptorBuilder, frame, scope, Builtin.getMinusFun(descriptorBuilder.build()), "-");
+        putSlot(descriptorBuilder, frame, scope, Builtin.getMulFun(descriptorBuilder.build()), "*");
+        putSlot(descriptorBuilder, frame, scope, Builtin.getPrintFun(descriptorBuilder.build()), "println");
+        putSlot(descriptorBuilder, frame, scope, Builtin.getTimeFun(descriptorBuilder.build()), "time");
 
         return frame;
-    }*/
+    }
 
     static private void putSlot(
             FrameDescriptor.Builder descriptorBuilder,
             Frame frame,
             LexicalScope scope,
-            Object function
+            Object function,
+            String name
     ) {
-        int slot = descriptorBuilder.addSlot(FrameSlotKind.Object, "+", "+");
-        scope.locals.put("+", slot);
+        int slot = descriptorBuilder.addSlot(FrameSlotKind.Object, name, name);
+        scope.locals.put(name, slot);
         frame.setObject(slot, function);
     }
 }
