@@ -24,8 +24,8 @@ public class TFFunction {
         return this.scope;
     }
 
-    public static TFFunction createFunction(int[] slots, FrameDescriptor descriptor, TFNode[] nodes) {
-        RootNode newRootNode = TFRootNode.createRootNode(slots, descriptor, nodes);
+    public static TFFunction createFunction(int[] slots, FrameDescriptor descriptor, TFNode bodyNode) {
+        RootNode newRootNode = TFRootNode.createRootNode(slots, descriptor, bodyNode);
 
         return new TFFunction(Truffle.getRuntime().createCallTarget(newRootNode));// TODO deprecated API
     }

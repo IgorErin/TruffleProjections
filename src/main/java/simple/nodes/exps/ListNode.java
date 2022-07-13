@@ -5,6 +5,7 @@ import simple.Environment;
 import simple.nodes.Node;
 import simple.types.Function;
 import truffle.nodes.TFNode;
+import truffle.nodes.exps.TFInvokeNode;
 import truffle.parser.LexicalScope;
 
 import java.util.Collections;
@@ -42,8 +43,10 @@ public class ListNode implements Node {
         Function lambda = (Function) nodeList.get(0).eval(env);
         List<Object> args = new LinkedList<Object>();
 
-        for (Node i : nodeList.subList(1, nodeList.size())) {
-            args.add(i.eval(env));
+        if (nodeList.size() > 1) {
+            for (Node i : nodeList.subList(1, nodeList.size())) {
+                args.add(i.eval(env));
+            }
         }
 
         return lambda.execute(args);
@@ -74,6 +77,19 @@ public class ListNode implements Node {
 
     @Override
     public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
-        return null;
+        if (nodeList.size() == 0) {
+            return null;
+        }
+
+        TFNode funNode = nodeList.get(0).convert(descriptorBuilder, scope);
+        TFNode[] args = new TFNode[nodeList.size() - 1];
+
+        if (nodeList.size() > 1) {
+            for (int index = 1; index < nodeList.size(); index++) {
+                args[index] = nodeList.get(index).convert(descriptorBuilder, scope); //TODO Work ?
+            }
+        }
+
+        return new TFInvokeNode(funNode, args);
     }
 }

@@ -29,14 +29,14 @@ public class TFRootNode extends RootNode {
         return nodes[length - 1].executeGeneric(frame);
     }
 
-    public static RootNode createRootNode(int[] slots, FrameDescriptor descriptor, TFNode[] nodes) {
-        TFNode[] bodyNodes = new TFNode[slots.length + nodes.length];
+    public static RootNode createRootNode(int[] slots, FrameDescriptor descriptor, TFNode bodyNode) {
+        TFNode[] bodyNodes = new TFNode[slots.length + 1];
 
         for (int i = 0; i < slots.length; i++) {
             bodyNodes[i] = TFDefNodeGen.create(new ReadArgNode(i), slots[i]);
         }
 
-        System.arraycopy(nodes, 0, bodyNodes, slots.length, nodes.length);
+        bodyNodes[slots.length] = bodyNode;
 
         return new TFRootNode(bodyNodes, descriptor);
     }

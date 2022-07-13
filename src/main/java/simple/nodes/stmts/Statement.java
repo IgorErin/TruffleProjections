@@ -134,7 +134,7 @@ public abstract class Statement implements Node {
             }
 
             TFNode tFBodyNode = bodyNode.convert(descriptorBuilder, newScope);
-            TFFunction fun = TFFunction.createFunction(argSlots, descriptorBuilder.build(), new TFNode[] {tFBodyNode});
+            TFFunction fun = TFFunction.createFunction(argSlots, descriptorBuilder.build(), tFBodyNode);
 
             return TFLambdaNodeGen.create(fun);
         }
