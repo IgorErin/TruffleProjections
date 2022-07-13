@@ -3,7 +3,7 @@ package truffle.nodes;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import truffle.types.Function;
+import truffle.types.TFFunction;
 import truffle.types.TypesGen;
 
 public abstract class TFNode extends Node {
@@ -21,7 +21,7 @@ public abstract class TFNode extends Node {
         return TypesGen.expectString(executeGeneric(frame));
     }
 
-    public Function executeFunction(VirtualFrame frame) throws UnexpectedResultException {
-        return TypesGen.expectFunction(executeGeneric(frame));
+    public TFFunction executeFunction(VirtualFrame frame) throws UnexpectedResultException {
+        return TypesGen.expectTFFunction(executeGeneric(frame));
     }
 }

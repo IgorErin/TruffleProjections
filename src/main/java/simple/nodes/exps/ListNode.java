@@ -50,11 +50,6 @@ public class ListNode implements Node {
     }
 
     @Override
-    public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
-        return null;
-    }
-
-    @Override
     public boolean equals(Object another) {
         if (another instanceof ListNode anotherList) {
             int counter = 0;
@@ -75,5 +70,10 @@ public class ListNode implements Node {
         }
 
         return false;
+    }
+
+    @Override
+    public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
+        return null;
     }
 }

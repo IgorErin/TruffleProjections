@@ -7,7 +7,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.IndirectCallNode;
 import truffle.nodes.TFNode;
-import truffle.types.Function;
+import truffle.types.TFFunction;
 
 public class TFInvokeNode extends TFNode {
     @Child private TFNode funNode;
@@ -23,7 +23,7 @@ public class TFInvokeNode extends TFNode {
     @ExplodeLoop
     @Override
     public Object executeGeneric(VirtualFrame frame) {
-        Function fun = getFun(frame);
+        TFFunction fun = getFun(frame);
 
         CompilerAsserts.compilationConstant(argNodes.length);
 
@@ -35,7 +35,7 @@ public class TFInvokeNode extends TFNode {
         return callNode.call(fun.callTarget, frame, argValues);
     }
 
-    private Function getFun(VirtualFrame frame) {
+    private TFFunction getFun(VirtualFrame frame) {
         try {
             return funNode.executeFunction(frame);
         } catch (Exception e) {

@@ -5,12 +5,12 @@ import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.RootNode;
-import truffle.nodes.stmt.DefNodeGen;
+import truffle.nodes.stmt.TFDefNodeGen;
 
-public class FCPRootNode extends RootNode {
+public class TFRootNode extends RootNode {
     @Children private final TFNode[] nodes;
 
-    public FCPRootNode(TFNode[] nodes, FrameDescriptor descriptor) { // TODO why descriptor ???
+    public TFRootNode(TFNode[] nodes, FrameDescriptor descriptor) { // TODO why descriptor ???
         super(null, descriptor);
         this.nodes = nodes;
     }
@@ -18,7 +18,6 @@ public class FCPRootNode extends RootNode {
     @Override
     @ExplodeLoop
     public Object execute(VirtualFrame frame) {
-        Object result;
         int length = nodes.length;
 
         CompilerAsserts.compilationConstant(length);
@@ -34,11 +33,11 @@ public class FCPRootNode extends RootNode {
         TFNode[] bodyNodes = new TFNode[slots.length + nodes.length];
 
         for (int i = 0; i < slots.length; i++) {
-            bodyNodes[i] = DefNodeGen.create(new ReadArgNode(i), slots[i]);
+            bodyNodes[i] = TFDefNodeGen.create(new ReadArgNode(i), slots[i]);
         }
 
         System.arraycopy(nodes, 0, bodyNodes, slots.length, nodes.length);
 
-        return new FCPRootNode(bodyNodes, descriptor);
+        return new TFRootNode(bodyNodes, descriptor);
     }
 }

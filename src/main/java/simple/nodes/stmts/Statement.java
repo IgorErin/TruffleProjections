@@ -1,13 +1,18 @@
 package simple.nodes.stmts;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.FrameSlotKind;
 import simple.Environment;
 import simple.nodes.Node;
 import simple.nodes.exps.ListNode;
 import simple.nodes.exps.VarNode;
 import simple.types.Function;
 import truffle.nodes.TFNode;
+import truffle.nodes.stmt.TFDefNodeGen;
+import truffle.nodes.stmt.TFIfNode;
+import truffle.nodes.stmt.TFLambdaNodeGen;
 import truffle.parser.LexicalScope;
+import truffle.types.TFFunction;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -46,7 +51,11 @@ public abstract class Statement implements Node {
 
         @Override
         public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
-            return null;
+            TFNode cond = nodeList.get(1).convert(descriptorBuilder, scope);
+            TFNode ifNode = nodeList.get(2).convert(descriptorBuilder, scope);
+            TFNode elseNode = nodeList.get(3).convert(descriptorBuilder, scope);
+
+            return new TFIfNode(cond, ifNode, elseNode);
         }
     }
 
@@ -67,48 +76,78 @@ public abstract class Statement implements Node {
 
         @Override
         public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
-            return null;
+            String defName = ((VarNode) nodeList.get(1)).name();
+            TFNode defBody = nodeList.get(2).convert(descriptorBuilder, scope);
+
+            Integer frameSlot = scope.find(defName);
+            if (frameSlot == null) {
+                frameSlot = descriptorBuilder.addSlot(FrameSlotKind.Object, defName, defName);
+                scope.locals.put(defName, frameSlot);
+            }
+
+            return TFDefNodeGen.create(defBody, frameSlot);
         }
     }
 
     private static class LambdaStatement extends Statement {
+        final List<String> formalParameters;
+        final Node bodyNode;
         private LambdaStatement(List<Node> nodeList) {
             super(nodeList);
+            this.formalParameters = getFormalNames((ListNode) nodeList.get(1));
+            this.bodyNode = nodeList.get(2);
         }
 
         @Override
         public Object eval(Environment env) {
-            ListNode formalParameters = (ListNode) nodeList.get(1);
-            List<String> names = new LinkedList<String>();
-            Node body = nodeList.get(2);
-
-            for (Iterator<Node> it = formalParameters.iterator(); it.hasNext();) {
-                VarNode i = (VarNode) it.next();
-                names.add(i.name());
-            }
-
             return new Function() {
                 @Override
                 public Object execute(List<Object> args) {
-                    if (names.size() != args.size()) {
+                    if (formalParameters.size() != args.size()) {
                         throw new RuntimeException(
-                                "Wrong number of arguments, expected: " + names.size() + " but " + args.size() + " got"
+                                "Wrong number of arguments, expected: " +
+                                        formalParameters.size() + " but " + args.size() + " got"
                         );
                     }
 
                     Environment newEnv = new Environment(env);
-                    for (int i = 0; i < names.size(); i++) {
-                        newEnv.putValue(names.get(i), args.get(i));
+                    for (int i = 0; i < formalParameters.size(); i++) {
+                        newEnv.putValue(formalParameters.get(i), args.get(i));
                     }
 
-                    return body.eval(newEnv);
+                    return bodyNode.eval(newEnv);
                 }
             };
         }
 
         @Override
         public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
-            return null;
+            LexicalScope newScope = new LexicalScope(scope);
+            int[] argSlots = new int[formalParameters.size()];
+
+            for (int index = 0; index < formalParameters.size(); index++) {
+                String name = formalParameters.get(index);
+                int slot = descriptorBuilder.addSlot(FrameSlotKind.Object, name, name);
+
+                newScope.locals.put(name, slot);
+                argSlots[index] = slot;
+            }
+
+            TFNode tFBodyNode = bodyNode.convert(descriptorBuilder, newScope);
+            TFFunction fun = TFFunction.createFunction(argSlots, descriptorBuilder.build(), new TFNode[] {tFBodyNode});
+
+            return TFLambdaNodeGen.create(fun);
+        }
+
+        private List<String> getFormalNames(ListNode nodeList) {
+            List<String> params = new LinkedList<>();
+
+            for (Iterator<Node> it = nodeList.iterator(); it.hasNext();) {
+                VarNode i = (VarNode) it.next();
+                params.add(i.name());
+            }
+
+            return params;
         }
     }
 

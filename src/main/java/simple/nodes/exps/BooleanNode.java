@@ -4,6 +4,7 @@ import com.oracle.truffle.api.frame.FrameDescriptor;
 import simple.Environment;
 import simple.nodes.Node;
 import truffle.nodes.TFNode;
+import truffle.nodes.exps.TFBooleanNode;
 import truffle.parser.LexicalScope;
 
 public record BooleanNode(boolean value) implements Node {
@@ -24,6 +25,6 @@ public record BooleanNode(boolean value) implements Node {
 
     @Override
     public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
-        return null;
+        return new TFBooleanNode(value);
     }
 }

@@ -5,12 +5,12 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import truffle.nodes.TFNode;
 
-public class IfNode extends TFNode { //TODO how dsl generate this ?
+public class TFIfNode extends TFNode { //TODO how dsl generate this ?
     @Child TFNode condNode;
     @Child TFNode ifNode;
     @Child TFNode elseNode;
 
-    public IfNode(TFNode condNode, TFNode ifNode, TFNode elseNode) {
+    public TFIfNode(TFNode condNode, TFNode ifNode, TFNode elseNode) {
         this.condNode = condNode;
         this.ifNode = ifNode;
         this.elseNode = elseNode;

@@ -6,13 +6,13 @@ import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 import truffle.nodes.TFNode;
-import truffle.nodes.FCPRootNode;
+import truffle.nodes.TFRootNode;
 
-public class Function {
+public class TFFunction {
     public final RootCallTarget callTarget;
     private MaterializedFrame scope;
 
-    public Function(RootCallTarget callTarget) {
+    public TFFunction(RootCallTarget callTarget) {
         this.callTarget = callTarget;
     }
 
@@ -24,9 +24,9 @@ public class Function {
         return this.scope;
     }
 
-    public static Function createFunction(int[] slots, FrameDescriptor descriptor, TFNode[] nodes) {
-        RootNode newRootNode = FCPRootNode.createRootNode(slots, descriptor, nodes);
+    public static TFFunction createFunction(int[] slots, FrameDescriptor descriptor, TFNode[] nodes) {
+        RootNode newRootNode = TFRootNode.createRootNode(slots, descriptor, nodes);
 
-        return new Function(Truffle.getRuntime().createCallTarget(newRootNode));
+        return new TFFunction(Truffle.getRuntime().createCallTarget(newRootNode));// TODO deprecated API
     }
 }

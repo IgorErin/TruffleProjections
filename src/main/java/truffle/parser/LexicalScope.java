@@ -4,15 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LexicalScope {
-    private final Map<String, Integer> scope = new HashMap<String, Integer>();
-    private LexicalScope outer;
+    public final Map<String, Integer> locals = new HashMap<String, Integer>();
+    private final LexicalScope outer;
 
     public LexicalScope(LexicalScope outer) {
         this.outer = outer;
     }
 
-    Integer find(String name) {
-        final Integer result = scope.get(name);
+    public Integer find(String name) {
+        final Integer result = locals.get(name);
 
         if (result != null) {
             return result;
@@ -21,9 +21,5 @@ public class LexicalScope {
         } else {
             return null;
         }
-    }
-
-    Integer add(String name, int slot) {
-        return scope.put(name, slot);
     }
 }
