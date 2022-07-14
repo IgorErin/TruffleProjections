@@ -28,13 +28,13 @@ public abstract class TFVarNode extends TFNode {
             CompilerDirectives.transferToInterpreter();
             MaterializedFrame materializedFrame = (MaterializedFrame) frame.getArguments()[0];
 
-            try {
-                System.out.println(getSlot());
-                System.out.println(materializedFrame.getValue(getSlot()));
-                return materializedFrame.getObject(getSlot());
-            } catch (Exception e) {
-                throw new RuntimeException("Var not bound for: " + frame.getFrameDescriptor().getSlotName(getSlot()));
+            Object value = materializedFrame.getObject(getSlot());
+
+            if (value == null) {
+                throw new RuntimeException("Var not bound, name: " + frame.getFrameDescriptor().getSlotName(getSlot()));
             }
+
+            return value;
         }
 
         if (!frame.isObject(getSlot())) {

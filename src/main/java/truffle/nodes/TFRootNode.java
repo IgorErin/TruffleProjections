@@ -29,7 +29,7 @@ public class TFRootNode extends RootNode {
 
             return nodes[length - 1].executeGeneric(frame);
         } catch (Exception e) {
-            throw new RuntimeException("Lambda body " + e.getMessage());
+            throw new RuntimeException("Lambda body: " + e.getMessage());
         }
     }
 

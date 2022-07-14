@@ -47,7 +47,7 @@ public class TFInvokeNode extends TFNode {
             System.out.println(frame.getFrameDescriptor().getSlotName(((TFVarNode) funNode).getSlot()));
             return funNode.executeFunction(frame);
         } catch (Exception e) {
-            throw new UnsupportedSpecializationException(this, new TFNode[] {funNode}, e);
+            throw new RuntimeException("Inside InvokeNode, eval funNode: " + e.getMessage());
         }
     }
 }

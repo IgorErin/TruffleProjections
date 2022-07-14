@@ -35,7 +35,7 @@ public class TruffleMain {
         DirectCallNode directCall = Truffle.getRuntime().createDirectCallNode(rootNode.getCallTarget());
         Frame frame = getTopFrame(newBuilder.build(), newScope);
 
-        System.out.println(directCall.call(frame.materialize(), new ArgArray(new TFNode[] {})));
+        directCall.call(frame.materialize(), new ArgArray(new TFNode[] {}));
     }
 
     static private void setBuiltins(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
@@ -44,6 +44,11 @@ public class TruffleMain {
         putSlot(descriptorBuilder, scope, "*");
         putSlot(descriptorBuilder, scope, "println");
         putSlot(descriptorBuilder, scope, "now");
+        putSlot(descriptorBuilder, scope, ">");
+        putSlot(descriptorBuilder, scope, ">=");
+        putSlot(descriptorBuilder, scope, "<");
+        putSlot(descriptorBuilder, scope, "<=");
+        putSlot(descriptorBuilder, scope, "=");
     }
 
     static private Frame getTopFrame(FrameDescriptor descriptor, LexicalScope scope) {
@@ -54,6 +59,11 @@ public class TruffleMain {
         frame.setObject(scope.find("*"), Builtin.getMulFun(descriptor));
         frame.setObject(scope.find("println"), Builtin.getPrintFun(descriptor));
         frame.setObject(scope.find("now"), Builtin.getTimeFun(descriptor));
+        frame.setObject(scope.find(">"), Builtin.getGFun(descriptor));
+        frame.setObject(scope.find(">="), Builtin.getGOEFun(descriptor));
+        frame.setObject(scope.find("<"), Builtin.getLFun(descriptor));
+        frame.setObject(scope.find("<="), Builtin.getLOEFun(descriptor));
+        frame.setObject(scope.find("="), Builtin.getEFun(descriptor));
 
         return frame;
     }
