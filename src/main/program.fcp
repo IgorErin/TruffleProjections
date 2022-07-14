@@ -2,9 +2,17 @@
 
 (define fib (lambda (x) (iter x 0 1)))
 
+(fib 20)
+(fib 20)
+(fib 20)
+(fib 20)
+(fib 20)
+(fib 20)
+(fib 20)
+
 (define first (now))
 
-(println (fib 40))
+(fib 20)
 
 (define second (now))
 
