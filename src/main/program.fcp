@@ -1,3 +1,11 @@
-(define iter (lambda (x) (if (> x 4) (iter (+ x (- 1))) (println x))))
+(define iter (lambda (counter first second) (if (= counter 0) (+ second) (iter (+ counter (- 1)) second (+ first second)))))
 
-(iter 5)
+(define fib (lambda (x) (iter x 0 1)))
+
+(define first (now))
+
+(println (fib 40))
+
+(define second (now))
+
+(println (+ second (- first)))

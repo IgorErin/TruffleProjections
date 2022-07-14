@@ -8,7 +8,7 @@ public class SimpleFcpMain {
     static public void main(String[] args) {
         SimpleFcpParser newParser = new SimpleFcpParser();
 
-        List<Node> nodeList = newParser.getAst("src/test/java/defTest.fcp");
+        List<Node> nodeList = newParser.getAst("src/main/program.fcp");
         Environment env = new Environment();
 
         try {

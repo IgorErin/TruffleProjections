@@ -74,13 +74,13 @@ public abstract class Statement implements Node {
         @Override
         public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
             String defName = ((VarNode) nodeList.get(1)).name();
-            TFNode defBody = nodeList.get(2).convert(descriptorBuilder, scope);
-
             Integer frameSlot = scope.find(defName);
             if (frameSlot == null) {
                 frameSlot = descriptorBuilder.addSlot(FrameSlotKind.Object, defName, defName);
                 scope.locals.put(defName, frameSlot);
             }
+
+            TFNode defBody = nodeList.get(2).convert(descriptorBuilder, scope);
 
             return TFDefNodeGen.create(defBody, frameSlot);
         }

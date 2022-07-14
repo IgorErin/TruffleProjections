@@ -35,7 +35,7 @@ public class TruffleMain {
         DirectCallNode directCall = Truffle.getRuntime().createDirectCallNode(rootNode.getCallTarget());
         Frame frame = getTopFrame(newBuilder.build(), newScope);
 
-        directCall.call(frame.materialize(), new ArgArray(new TFNode[] {}));
+        directCall.call(new FrameStack(frame.materialize(), null), new ArgArray(new TFNode[] {}));
     }
 
     static private void setBuiltins(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {

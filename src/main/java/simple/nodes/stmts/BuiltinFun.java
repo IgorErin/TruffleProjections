@@ -33,10 +33,9 @@ public class BuiltinFun {
                 throw new RuntimeException("subtraction not def for zero args");
             }
 
-            long sum = (long) args.get(0);
-            List<Object> subList = args.subList(1, args.size());
+            long sum = 0;
 
-            for (Object number : subList) {
+            for (Object number : args) {
                 sum -= (long) number;
             }
 
@@ -106,6 +105,13 @@ public class BuiltinFun {
         @Override
         public Object execute(List<Object> args) {
             return (long) args.get(0) == (long) args.get(1);
+        }
+    };
+
+    static public Function timeFun = new Function() {
+        @Override
+        public Object execute(List<Object> args) {
+            return System.nanoTime();
         }
     };
 }

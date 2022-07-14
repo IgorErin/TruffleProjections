@@ -5,6 +5,7 @@ import simple.Environment;
 import simple.nodes.Node;
 import simple.types.Function;
 import truffle.nodes.TFNode;
+import truffle.nodes.builtin.TFUnit;
 import truffle.nodes.exps.TFInvokeNode;
 import truffle.parser.LexicalScope;
 
@@ -78,7 +79,7 @@ public class ListNode implements Node {
     @Override
     public TFNode convert(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
         if (nodeList.size() == 0) {
-            return null;
+            return new TFUnit();
         }
 
         TFNode funNode = nodeList.get(0).convert(descriptorBuilder, scope);

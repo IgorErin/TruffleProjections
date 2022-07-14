@@ -9,6 +9,7 @@ import com.oracle.truffle.api.nodes.DirectCallNode;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.IndirectCallNode;
 import simple.nodes.exps.VarNode;
+import truffle.FrameStack;
 import truffle.nodes.TFNode;
 import truffle.parser.ArgArray;
 import truffle.types.TFFunction;
@@ -37,14 +38,15 @@ public class TFInvokeNode extends TFNode {
             }
 
             DirectCallNode callNode = Truffle.getRuntime().createDirectCallNode(fun.callTarget);
-            MaterializedFrame materializedFrame = (MaterializedFrame) frame.getArguments()[0];
+            FrameStack oldStack = (FrameStack) frame.getArguments()[0];
 
-            return callNode.call(materializedFrame, new ArgArray(argValues));
+            return callNode.call(new FrameStack(frame.materialize(), oldStack), new ArgArray(argValues));
     }
 
     private TFFunction getFun(VirtualFrame frame) {
         try {
-            System.out.println(frame.getFrameDescriptor().getSlotName(((TFVarNode) funNode).getSlot()));
+            //System.out.println("invoking: " + frame.getFrameDescriptor().getSlotName(((TFVarNode) funNode).getSlot()));
+            //System.out.println(((TFVarNode) funNode).getSlot());
             return funNode.executeFunction(frame);
         } catch (Exception e) {
             throw new RuntimeException("Inside InvokeNode, eval funNode: " + e.getMessage());

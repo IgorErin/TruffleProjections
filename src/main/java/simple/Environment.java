@@ -24,6 +24,7 @@ public class Environment {
         env.put("<=", BuiltinFun.lessOEFun);
         env.put("=", BuiltinFun.equalFun);
         env.put("println", BuiltinFun.printlnFun);
+        env.put("now", BuiltinFun.timeFun);
     }
 
     public Object getValue(String name) {

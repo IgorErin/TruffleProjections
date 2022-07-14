@@ -5,6 +5,7 @@ import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import truffle.FrameStack;
 import truffle.nodes.TFNode;
 
 
@@ -26,10 +27,11 @@ public abstract class TFVarNode extends TFNode {
     protected Object readObject(VirtualFrame frame) {
         if (frame.getValue(getSlot()) == frame.getFrameDescriptor().getDefaultValue()) {
             CompilerDirectives.transferToInterpreter();
-            MaterializedFrame materializedFrame = (MaterializedFrame) frame.getArguments()[0];
 
-            Object value = materializedFrame.getObject(getSlot());
+            //System.out.println("reading with stack: " + frame.getFrameDescriptor().getSlotName(getSlot()));
 
+            Object value = findScopedVar(frame);
+            //System.out.println(getSlot());
             if (value == null) {
                 throw new RuntimeException("Var not bound, name: " + frame.getFrameDescriptor().getSlotName(getSlot()));
             }
@@ -46,5 +48,11 @@ public abstract class TFVarNode extends TFNode {
         }
 
         return frame.getObject(getSlot());
+    }
+
+    private Object findScopedVar(VirtualFrame frame) {
+        FrameStack frameStack = (FrameStack) frame.getArguments()[0];
+
+        return frameStack.find(getSlot());
     }
 }
