@@ -1,5 +1,3 @@
-(define iter (lambda (count first second) (if (= count 0) (+ first) (+ (iter (- count 1) second (+ first second))))))
-
-(define fib (lambda (num) (+ (iter num 0 1))))
-
-(print (fib 8))
+(define first (now))
+(define second (now))
+(println (+ second (- first)))

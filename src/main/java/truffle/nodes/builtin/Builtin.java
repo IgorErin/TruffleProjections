@@ -3,6 +3,9 @@ package truffle.nodes.builtin;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import truffle.nodes.TFNode;
 import truffle.nodes.TFRootNode;
+import truffle.nodes.builtin.arithmetic.AddNode;
+import truffle.nodes.builtin.arithmetic.MinusNode;
+import truffle.nodes.builtin.arithmetic.MulNode;
 import truffle.types.TFFunction;
 
 public class Builtin {

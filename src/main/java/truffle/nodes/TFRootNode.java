@@ -20,20 +20,16 @@ public class TFRootNode extends RootNode {
     public Object execute(VirtualFrame frame) {
         int length = nodes.length;
 
-        if (length == 0) {
-            return null;
-        }
-
         CompilerAsserts.compilationConstant(length);
 
-        for (int i = 0; i < length - 1; i++) {
-            nodes[i].executeGeneric(frame);
-        }
-
         try {
+            for (int i = 0; i < length - 1; i++) {
+                nodes[i].executeGeneric(frame);
+            }
+
             return nodes[length - 1].executeGeneric(frame);
         } catch (Exception e) {
-            throw new RuntimeException("Empty lambda body");
+            throw new RuntimeException("Lambda body " + e.getMessage());
         }
     }
 

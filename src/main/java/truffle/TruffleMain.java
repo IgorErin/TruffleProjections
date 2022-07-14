@@ -11,6 +11,7 @@ import simple.nodes.Node;
 import truffle.nodes.TFNode;
 import truffle.nodes.TFRootNode;
 import truffle.nodes.builtin.Builtin;
+import truffle.parser.ArgArray;
 import truffle.parser.LexicalScope;
 
 import java.util.List;
@@ -19,10 +20,12 @@ public class TruffleMain {
     static public void main(String[] args) {
         SimpleFcpParser newParser = new SimpleFcpParser();
 
-        List<Node> nodeList = newParser.getAst("src/test/java/defTest.fcp");
+        List<Node> nodeList = newParser.getAst("src/main/program.fcp");
         TFNode[] nodes = new TFNode[nodeList.size()];
         FrameDescriptor.Builder newBuilder = FrameDescriptor.newBuilder();
         LexicalScope newScope = new LexicalScope(null);
+
+        setBuiltins(newBuilder, newScope);
 
         for (int index = 0; index < nodeList.size(); index++) {
             nodes[index] = nodeList.get(index).convert(newBuilder, newScope);
@@ -30,32 +33,37 @@ public class TruffleMain {
 
         RootNode rootNode = new TFRootNode(nodes, newBuilder.build());
         DirectCallNode directCall = Truffle.getRuntime().createDirectCallNode(rootNode.getCallTarget());
-        Frame frame = topFrame(newBuilder, newScope);
+        Frame frame = getTopFrame(newBuilder.build(), newScope);
 
-        directCall.call(frame);
+        System.out.println(directCall.call(frame.materialize(), new ArgArray(new TFNode[] {})));
     }
 
-    static private Frame topFrame(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
-        Frame frame = Truffle.getRuntime().createVirtualFrame(new Object[] {}, descriptorBuilder.build());
+    static private void setBuiltins(FrameDescriptor.Builder descriptorBuilder, LexicalScope scope) {
+        putSlot(descriptorBuilder, scope, "-");
+        putSlot(descriptorBuilder, scope, "+");
+        putSlot(descriptorBuilder, scope, "*");
+        putSlot(descriptorBuilder, scope, "println");
+        putSlot(descriptorBuilder, scope, "now");
+    }
 
-        putSlot(descriptorBuilder, frame, scope, Builtin.getPlusFun(descriptorBuilder.build()), "+");
-        putSlot(descriptorBuilder, frame, scope, Builtin.getMinusFun(descriptorBuilder.build()), "-");
-        putSlot(descriptorBuilder, frame, scope, Builtin.getMulFun(descriptorBuilder.build()), "*");
-        putSlot(descriptorBuilder, frame, scope, Builtin.getPrintFun(descriptorBuilder.build()), "println");
-        putSlot(descriptorBuilder, frame, scope, Builtin.getTimeFun(descriptorBuilder.build()), "time");
+    static private Frame getTopFrame(FrameDescriptor descriptor, LexicalScope scope) {
+        Frame frame = Truffle.getRuntime().createVirtualFrame(new Object[] {}, descriptor);
+
+        frame.setObject(scope.find("-"), Builtin.getMinusFun(descriptor));
+        frame.setObject(scope.find("+"), Builtin.getPlusFun(descriptor));
+        frame.setObject(scope.find("*"), Builtin.getMulFun(descriptor));
+        frame.setObject(scope.find("println"), Builtin.getPrintFun(descriptor));
+        frame.setObject(scope.find("now"), Builtin.getTimeFun(descriptor));
 
         return frame;
     }
 
     static private void putSlot(
             FrameDescriptor.Builder descriptorBuilder,
-            Frame frame,
             LexicalScope scope,
-            Object function,
             String name
     ) {
         int slot = descriptorBuilder.addSlot(FrameSlotKind.Object, name, name);
         scope.locals.put(name, slot);
-        frame.setObject(slot, function);
     }
 }

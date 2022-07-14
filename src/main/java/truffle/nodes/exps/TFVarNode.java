@@ -3,6 +3,7 @@ package truffle.nodes.exps;
 import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import truffle.nodes.TFNode;
 
@@ -23,6 +24,19 @@ public abstract class TFVarNode extends TFNode {
 
     @Specialization(replaces = {"readLong", "readBoolean"})
     protected Object readObject(VirtualFrame frame) {
+        if (frame.getValue(getSlot()) == frame.getFrameDescriptor().getDefaultValue()) {
+            CompilerDirectives.transferToInterpreter();
+            MaterializedFrame materializedFrame = (MaterializedFrame) frame.getArguments()[0];
+
+            try {
+                System.out.println(getSlot());
+                System.out.println(materializedFrame.getValue(getSlot()));
+                return materializedFrame.getObject(getSlot());
+            } catch (Exception e) {
+                throw new RuntimeException("Var not bound for: " + frame.getFrameDescriptor().getSlotName(getSlot()));
+            }
+        }
+
         if (!frame.isObject(getSlot())) {
             CompilerDirectives.transferToInterpreter();
             Object result = frame.getValue(getSlot());
