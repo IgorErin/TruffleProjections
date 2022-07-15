@@ -3,6 +3,7 @@ package simple;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import simple.nodes.Node;
+import simple.nodes.exps.BooleanNode;
 import simple.nodes.exps.IntNode;
 import simple.nodes.exps.ListNode;
 import simple.nodes.exps.VarNode;
@@ -24,9 +25,9 @@ class SimpleFcpParserTest {
     public void ifTest() {
         Node ifNode = fcpParser.getAst("src/test/java/ifTest.fcp").get(0);
         Node correctIfNode = SimpleFcpStatement.getIfNode(
-                SimpleFcpBuiltin.getBinOpNode("<", new VarNode("x"), new VarNode("y")),
-                new ListNode(new VarNode("print"), new VarNode("x")),
-                new ListNode(new VarNode("print"), new VarNode("y"))
+                SimpleFcpBuiltin.getBinOpNode("<", new IntNode(4), new IntNode(3)),
+                new BooleanNode(true),
+                new BooleanNode(false)
         );
 
         Assertions.assertEquals(ifNode, correctIfNode);
