@@ -19,8 +19,8 @@ import java.util.List;
 public class TruffleMain {
     static public void main(String[] args) {
         SimpleFcpParser newParser = new SimpleFcpParser();
-
         List<Node> nodeList = newParser.getAst("src/main/program.fcp");
+
         TFNode[] nodes = new TFNode[nodeList.size()];
         FrameDescriptor.Builder newBuilder = FrameDescriptor.newBuilder();
         LexicalScope newScope = new LexicalScope(null);
@@ -33,10 +33,15 @@ public class TruffleMain {
 
         RootNode rootNode = new TFRootNode(nodes, newBuilder.build());
         DirectCallNode directCall = Truffle.getRuntime().createDirectCallNode(rootNode.getCallTarget());
+
         Frame frame = getTopFrame(newBuilder.build(), newScope);
 
-        for (int i = 0; i < 100; i++) {
-            directCall.call(new FrameStack(frame.materialize(), null), new ArgArray(new TFNode[]{}));
+        try {
+            for (int i = 0; i < 100; i++) {
+                directCall.call(new FrameStack(frame.materialize(), null), new ArgArray(new TFNode[]{}));
+            }
+        } catch (Exception e) {
+            System.out.println("Exception in eval:" + e.getMessage());
         }
     }
 

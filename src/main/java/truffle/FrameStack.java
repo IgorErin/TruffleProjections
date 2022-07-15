@@ -1,6 +1,5 @@
 package truffle;
 
-import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 
 public class FrameStack {

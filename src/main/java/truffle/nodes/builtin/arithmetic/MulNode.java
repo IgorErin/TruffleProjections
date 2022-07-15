@@ -1,9 +1,7 @@
 package truffle.nodes.builtin.arithmetic;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
-import truffle.nodes.TFNode;
 import truffle.nodes.builtin.LocalFunNode;
-import truffle.parser.ArgArray;
 
 public class MulNode extends LocalFunNode {
     @Override

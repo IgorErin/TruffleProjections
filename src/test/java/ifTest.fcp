@@ -1,1 +1,1 @@
-(if (< x y) (print x) (print y))
+(if (< 4 3) #t #f)

@@ -1,0 +1,3 @@
+(define val #t)
+
+(if val #t #f)

@@ -65,10 +65,11 @@ public abstract class Statement implements Node {
         public Object eval(Environment env) {
             String defName = ((VarNode) nodeList.get(1)).name();
             Node defBody = nodeList.get(2);
+            Object result = defBody.eval(env);
 
-            env.putValue(defName, defBody.eval(env));
+            env.putValue(defName, result);
 
-            return null;
+            return result;
         }
 
         @Override
@@ -114,13 +115,14 @@ public abstract class Statement implements Node {
 
                     int length = bodyNodes.length;
 
-                    for (int index = 0; index < length - 1; index++) {
-                        bodyNodes[index].eval(newEnv);
-                    }
                     try {
+                        for (int index = 0; index < length - 1; index++) {
+                            bodyNodes[index].eval(newEnv);
+                        }
+
                         return bodyNodes[length - 1].eval(newEnv);
                     } catch (Exception e) {
-                        throw new RuntimeException("Empty lambda body");
+                        throw new RuntimeException("Lambda body: ");
                     }
                 }
             };
