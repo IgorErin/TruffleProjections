@@ -18,8 +18,14 @@ import java.util.List;
 
 public class TruffleMain {
     static public void main(String[] args) {
+        for (int i = 0; i < 20; i++) {
+            execute("src/main/program.fcp");
+        }
+    }
+
+    static public Object execute(String fileName) {
         SimpleFcpParser newParser = new SimpleFcpParser();
-        List<Node> nodeList = newParser.getAst("src/main/program.fcp");
+        List<Node> nodeList = newParser.getAst(fileName);
 
         TFNode[] nodes = new TFNode[nodeList.size()];
         FrameDescriptor.Builder newBuilder = FrameDescriptor.newBuilder();
@@ -37,11 +43,10 @@ public class TruffleMain {
         Frame frame = getTopFrame(newBuilder.build(), newScope);
 
         try {
-            for (int i = 0; i < 100; i++) {
-                directCall.call(new FrameStack(frame.materialize(), null), new ArgArray(new TFNode[]{}));
-            }
+            return directCall.call(new FrameStack(frame.materialize(), null), new ArgArray(new TFNode[]{}));
         } catch (Exception e) {
             System.out.println("Exception in eval:" + e.getMessage());
+            return null;
         }
     }
 
@@ -58,7 +63,7 @@ public class TruffleMain {
         putSlot(descriptorBuilder, scope, "=");
     }
 
-    static private Frame getTopFrame(FrameDescriptor descriptor, LexicalScope scope) {
+    static public Frame getTopFrame(FrameDescriptor descriptor, LexicalScope scope) {
         Frame frame = Truffle.getRuntime().createVirtualFrame(new Object[] {}, descriptor);
 
         frame.setObject(scope.find("-"), Builtin.getMinusFun(descriptor));
