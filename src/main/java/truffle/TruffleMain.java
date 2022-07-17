@@ -18,9 +18,9 @@ import java.util.List;
 
 public class TruffleMain {
     static public void main(String[] args) {
-        for (int i = 0; i < 20; i++) {
-            execute("src/main/program.fcp");
-        }
+        //for (int i = 0; i < 20; i++) {
+            execute("src/main/localVarProgram.fcp");
+        //}
     }
 
     static public Object execute(String fileName) {
@@ -45,7 +45,7 @@ public class TruffleMain {
         try {
             return directCall.call(new FrameStack(frame.materialize(), null), new ArgArray(new TFNode[]{}));
         } catch (Exception e) {
-            System.out.println("Exception in eval:" + e.getMessage());
+            System.out.println("Exception in eval: " + e.getMessage());
             return null;
         }
     }

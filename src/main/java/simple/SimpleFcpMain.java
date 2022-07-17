@@ -8,15 +8,17 @@ public class SimpleFcpMain {
     static public void main(String[] args) {
         SimpleFcpParser newParser = new SimpleFcpParser();
 
-        List<Node> nodeList = newParser.getAst("src/main/program.fcp");
+        List<Node> nodeList = newParser.getAst("src/main/localVarProgram.fcp");
         Environment env = new Environment();
 
-        try {
-            for (Node node : nodeList) {
-                node.eval(env);
+        for (int i = 0; i < 20; i++) {
+            try {
+                for (Node node : nodeList) {
+                    node.eval(env);
+                }
+            } catch (Exception e) {
+                System.out.println("Eval exception: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println("Eval exception: " + e.getMessage());
         }
     }
 }

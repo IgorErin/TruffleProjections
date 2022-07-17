@@ -77,7 +77,7 @@ public abstract class Statement implements Node {
             String defName = ((VarNode) nodeList.get(1)).name();
             Integer frameSlot = scope.find(defName);
             if (frameSlot == null) {
-                frameSlot = descriptorBuilder.addSlot(FrameSlotKind.Object, defName, defName);
+                frameSlot = descriptorBuilder.addSlot(FrameSlotKind.Illegal, defName, defName);
                 scope.locals.put(defName, frameSlot);
             }
 
@@ -135,7 +135,7 @@ public abstract class Statement implements Node {
 
             for (int index = 0; index < formalParameters.size(); index++) {
                 String name = formalParameters.get(index);
-                int slot = descriptorBuilder.addSlot(FrameSlotKind.Object, name, name);
+                int slot = descriptorBuilder.addSlot(FrameSlotKind.Illegal, name, name);
 
                 newScope.locals.put(name, slot);
                 argSlots[index] = slot;

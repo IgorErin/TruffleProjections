@@ -12,10 +12,10 @@ import truffle.nodes.TFNode;
 public abstract class TFDefNode extends TFNode { //TODO how dsl generate this ?
     protected abstract int getSlot();
 
-    @Specialization(guards = "isIntOrIllegal(frame)")
-    protected int writeInt(VirtualFrame frame, int value) {
+    @Specialization(guards = "isLongOrIllegal(frame)")
+    protected Long writeLong(VirtualFrame frame, long value) {
         frame.getFrameDescriptor().setSlotKind(getSlot(), FrameSlotKind.Int);
-        frame.setInt(getSlot(), value);
+        frame.setLong(getSlot(), value);
 
         return value;
     }
@@ -28,8 +28,10 @@ public abstract class TFDefNode extends TFNode { //TODO how dsl generate this ?
         return value;
     }
 
-    @Specialization(replaces = {"writeInt", "writeBoolean"})
+    @Specialization(replaces = {"writeLong", "writeBoolean"})
     protected Object writeObject(VirtualFrame frame, Object value) {
+        //System.out.println("write as Object: " + frame.getFrameDescriptor().getSlotName(getSlot()));
+
         frame.getFrameDescriptor().setSlotKind(getSlot(), FrameSlotKind.Object);
         frame.setObject(getSlot(), value);
 
@@ -38,10 +40,10 @@ public abstract class TFDefNode extends TFNode { //TODO how dsl generate this ?
 
     public abstract Object executeWrite(VirtualFrame frame, Object value);
 
-    protected boolean isIntOrIllegal(VirtualFrame frame) {
+    protected boolean isLongOrIllegal(VirtualFrame frame) {
         final FrameSlotKind kind = frame.getFrameDescriptor().getSlotKind(getSlot());
 
-        return kind == FrameSlotKind.Int || kind == FrameSlotKind.Illegal;
+        return kind == FrameSlotKind.Long || kind == FrameSlotKind.Illegal;
     }
 
     protected boolean isBooleanOrIllegal(VirtualFrame frame) {

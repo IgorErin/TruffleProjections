@@ -1,0 +1,10 @@
+
+(define fibFun (lambda (first second counter fun) (if (= counter 0) (+ second) (fun second (+ first second) (+ counter (- 1)) fun))))
+
+(define first (now))
+
+(println (fibFun 0 1 68 fibFun))
+
+(define second (now))
+
+(println (+ second (- first)))

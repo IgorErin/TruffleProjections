@@ -37,7 +37,11 @@ public class TFInvokeNode extends TFNode {
             DirectCallNode callNode = Truffle.getRuntime().createDirectCallNode(fun.callTarget);
             FrameStack oldStack = (FrameStack) frame.getArguments()[0];
 
-            return callNode.call(new FrameStack(frame.materialize(), oldStack), new ArgArray(argValues));
+            try {
+                return callNode.call(new FrameStack(frame.materialize(), oldStack), new ArgArray(argValues));
+            } catch (Exception e) {
+                throw new RuntimeException("Invoke Node call: " + e.getMessage());
+            }
     }
 
     private TFFunction getFun(VirtualFrame frame) {
