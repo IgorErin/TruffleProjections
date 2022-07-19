@@ -18,7 +18,7 @@ public class EvalTest {
 
     @Test
     public void defTest() {
-        Node defNode = fcpParser.getAst("src/test/java/defTest.fcp").get(0);
+        Node defNode = fcpParser.getAstFromFile("src/test/java/defTest.fcp").get(0);
 
         Assertions.assertEquals((long) 4, defNode.eval(env));
         Assertions.assertEquals((long) 4, env.getValue("name"));
@@ -26,14 +26,14 @@ public class EvalTest {
 
     @Test
     public void ifTest() {
-        Node ifNode = fcpParser.getAst("src/test/java/ifTest.fcp").get(0);
+        Node ifNode = fcpParser.getAstFromFile("src/test/java/ifTest.fcp").get(0);
 
         Assertions.assertEquals(false, ifNode.eval(env));
     }
 
     @Test
     public void fibTest() {
-        List<Node> nodes =  fcpParser.getAst("src/test/java/fibTest.fcp");
+        List<Node> nodes =  fcpParser.getAstFromFile("src/test/java/fibTest.fcp");
         Object result = null;
 
         for (Node node : nodes) {
@@ -46,21 +46,21 @@ public class EvalTest {
 
     @Test
     public void plusTest() {
-        Node node = fcpParser.getAst("src/test/java/plusTest.fcp").get(0);
+        Node node = fcpParser.getAstFromFile("src/test/java/plusTest.fcp").get(0);
 
         Assertions.assertEquals((long) 7, node.eval(env));
     }
 
     @Test
     public void minusTest() {
-        Node node = fcpParser.getAst("src/test/java/minusTest.fcp").get(0);
+        Node node = fcpParser.getAstFromFile("src/test/java/minusTest.fcp").get(0);
 
         Assertions.assertEquals((long) -7, node.eval(env));
     }
 
     @Test
     public void falseBooleanDefTest() {
-        List<Node> nodes = fcpParser.getAst("src/test/java/falseBooleanDefTest.fcp");
+        List<Node> nodes = fcpParser.getAstFromFile("src/test/java/falseBooleanDefTest.fcp");
         nodes.get(0).eval(env);
 
         Assertions.assertEquals( false, nodes.get(1).eval(env));
@@ -68,7 +68,7 @@ public class EvalTest {
 
     @Test
     public void trueBooleanDefTest() {
-        List<Node> nodes = fcpParser.getAst("src/test/java/trueBooleanDefTest.fcp");
+        List<Node> nodes = fcpParser.getAstFromFile("src/test/java/trueBooleanDefTest.fcp");
         nodes.get(0).eval(env);
 
         Assertions.assertEquals( true, nodes.get(1).eval(env));

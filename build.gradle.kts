@@ -27,17 +27,17 @@ dependencies {
     compileOnly("org.graalvm.truffle:truffle-tck:22.1.0.1")
     implementation("org.graalvm.sdk:graal-sdk:22.1.0.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation(platform("org.junit:junit-bom:5.8.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 
     implementation("org.antlr:antlr4:4.10.1")
 }
 
 tasks.getByName<JavaExec>("run") {
-    jvmArgs("-Dgraalvm.locatorDisabled=true")
+    jvmArgs(jvmArgsList)
 }
 
 tasks.getByName<Test>("test") {
-    jvmArgs("-Dgraalvm.locatorDisabled=true")
+    jvmArgs(jvmArgsList)
     useJUnitPlatform()
 }

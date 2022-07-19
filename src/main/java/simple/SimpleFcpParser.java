@@ -1,5 +1,6 @@
 package simple;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import simple.nodes.Node;
@@ -11,6 +12,8 @@ import common.fcpBaseListener;
 import common.fcpLexer;
 import common.fcpParser;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -74,21 +77,28 @@ public class SimpleFcpParser extends fcpBaseListener {
         }
     }
 
-    public List<Node> getAst(String fileName) {
+    private List<Node> parse(org.antlr.v4.runtime.CharStream input) {
+        fcpLexer lexer = new fcpLexer(input);
+        fcpParser parser = new fcpParser(new CommonTokenStream(lexer));
+        SimpleFcpParser truffleParser = new SimpleFcpParser();
+
+        parser.addParseListener(truffleParser);
+        parser.program();
+
+        return truffleParser.getRootNodeList();
+    }
+
+    public List<Node> getAstFromFile(String fileName) {
         try {
             org.antlr.v4.runtime.CharStream input = CharStreams.fromFileName(fileName);
 
-            fcpLexer lexer = new fcpLexer(input);
-            fcpParser parser = new fcpParser(new CommonTokenStream(lexer));
-            SimpleFcpParser truffleParser = new SimpleFcpParser();
-
-            parser.addParseListener(truffleParser);
-            parser.program();
-
-            return truffleParser.getRootNodeList();
+            return parse(input);
         } catch (Exception e) {
-            System.out.println("Parse exception: " + e.getMessage());
-            return new LinkedList<>();
+            throw  new RuntimeException("Parse exception: " + e.getMessage());
         }
+    }
+
+    public List<Node> getAstFromReader(Reader reader) throws IOException {
+        return parse(new ANTLRInputStream(reader));
     }
 }

@@ -8,11 +8,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 public class ConvertTest {
-    @ParameterizedTest
+    /*@ParameterizedTest
     @MethodSource("provideStringsForIsBlank")
     void isBlank_ShouldReturnTrueForNullOrBlankStrings(String fileName, Object expected) {
         Object value = TruffleMain.execute(fileName);
-        System.out.println(expected + " " + value);
 
         Assertions.assertEquals(expected, value);
     }
@@ -28,5 +27,5 @@ public class ConvertTest {
                 Arguments.of("src/test/java/trueBooleanDefTest.fcp", true),
                 Arguments.of("src/test/java/trueBooleanDefTest.fcp", true)
         );
-    }
+    }*/
 }

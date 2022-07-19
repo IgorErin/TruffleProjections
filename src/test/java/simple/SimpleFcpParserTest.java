@@ -15,7 +15,7 @@ class SimpleFcpParserTest {
 
     @Test
     public void defTest() {
-        Node defNode = fcpParser.getAst("src/test/java/defTest.fcp").get(0);
+        Node defNode = fcpParser.getAstFromFile("src/test/java/defTest.fcp").get(0);
         Node correctDefNode = SimpleFcpStatement.getDefNode(new VarNode("name"), new IntNode(4));
 
         Assertions.assertEquals(correctDefNode, defNode);
@@ -23,7 +23,7 @@ class SimpleFcpParserTest {
 
     @Test
     public void ifTest() {
-        Node ifNode = fcpParser.getAst("src/test/java/ifTest.fcp").get(0);
+        Node ifNode = fcpParser.getAstFromFile("src/test/java/ifTest.fcp").get(0);
         Node correctIfNode = SimpleFcpStatement.getIfNode(
                 SimpleFcpBuiltin.getBinOpNode("<", new IntNode(4), new IntNode(3)),
                 new BooleanNode(true),
@@ -35,7 +35,7 @@ class SimpleFcpParserTest {
 
     @Test
     public void lambdaTest() {
-        Node lambdaNode = fcpParser.getAst("src/test/java/lambdaTest.fcp").get(0);
+        Node lambdaNode = fcpParser.getAstFromFile("src/test/java/lambdaTest.fcp").get(0);
         Node correctLambdaNode = SimpleFcpStatement.getLambdaNode(
                 new ListNode(new VarNode("x"), new VarNode("y")),
                 SimpleFcpBuiltin.getBinOpNode("+", new VarNode("x"), new VarNode("y"))
@@ -46,7 +46,7 @@ class SimpleFcpParserTest {
 
     @Test
     public void plusTest() {
-        Node plusNode = fcpParser.getAst("src/test/java/plusTest.fcp").get(0);
+        Node plusNode = fcpParser.getAstFromFile("src/test/java/plusTest.fcp").get(0);
         Node correctPlusNode = SimpleFcpBuiltin.getBinOpNode(
                 "+",
                 new IntNode(3),
@@ -58,7 +58,7 @@ class SimpleFcpParserTest {
 
     @Test
     public void printTest() {
-        Node defNode = fcpParser.getAst("src/test/java/printTest.fcp").get(0);
+        Node defNode = fcpParser.getAstFromFile("src/test/java/printTest.fcp").get(0);
         Node correctDefNode = new ListNode(new VarNode("print"), new IntNode(4));
 
         Assertions.assertEquals(defNode, correctDefNode);

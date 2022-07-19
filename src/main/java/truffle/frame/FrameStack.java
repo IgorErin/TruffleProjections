@@ -1,4 +1,4 @@
-package truffle;
+package truffle.frame;
 
 import com.oracle.truffle.api.frame.MaterializedFrame;
 

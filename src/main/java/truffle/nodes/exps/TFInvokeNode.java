@@ -6,7 +6,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.DirectCallNode;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.IndirectCallNode;
-import truffle.FrameStack;
+import truffle.frame.FrameStack;
 import truffle.nodes.TFNode;
 import truffle.parser.ArgArray;
 import truffle.types.TFFunction;
