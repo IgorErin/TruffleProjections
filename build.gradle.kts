@@ -22,22 +22,23 @@ application {
 }
 
 dependencies {
+    implementation("org.antlr:antlr4:4.10.1")
+
     implementation("org.graalvm.truffle:truffle-api:22.1.0.1")
     annotationProcessor("org.graalvm.truffle:truffle-dsl-processor:22.1.0.1")
     compileOnly("org.graalvm.truffle:truffle-tck:22.1.0.1")
     implementation("org.graalvm.sdk:graal-sdk:22.1.0.1")
 
+
     testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-
-    implementation("org.antlr:antlr4:4.10.1")
 }
 
 tasks.getByName<JavaExec>("run") {
-    jvmArgs(jvmArgsList)
+    jvmArgs("-Dgraalvm.locatorDisabled=true")
 }
 
 tasks.getByName<Test>("test") {
-    jvmArgs(jvmArgsList)
+    jvmArgs("-Dgraalvm.locatorDisabled=true")
     useJUnitPlatform()
 }

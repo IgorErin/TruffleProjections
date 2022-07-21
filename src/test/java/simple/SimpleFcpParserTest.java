@@ -13,7 +13,7 @@ import simple.nodes.stmts.SimpleFcpStatement;
 class SimpleFcpParserTest {
     SimpleFcpParser fcpParser = new SimpleFcpParser();
 
-    @Test
+    /*@Test
     public void defTest() {
         Node defNode = fcpParser.getAstFromFile("src/test/java/defTest.fcp").get(0);
         Node correctDefNode = SimpleFcpStatement.getDefNode(new VarNode("name"), new IntNode(4));
@@ -62,5 +62,5 @@ class SimpleFcpParserTest {
         Node correctDefNode = new ListNode(new VarNode("print"), new IntNode(4));
 
         Assertions.assertEquals(defNode, correctDefNode);
-    }
+    }*/
 }

@@ -7,7 +7,7 @@ import truffle.nodes.TFNode;
 import truffle.types.TFFunction;
 
 @NodeField(name = "fun", type = TFFunction.class)
-public abstract class TFLambdaNode extends TFNode { //TODO how dsl generate this ?
+public abstract class TFLambdaNode extends TFNode {
     protected abstract TFFunction getFun();
 
     @Specialization(guards = "isScoped()")

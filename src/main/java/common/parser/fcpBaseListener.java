@@ -1,5 +1,5 @@
 // Generated from /home/zzigor/Projects/TruffleProjections/src/main/java/truffle/parser/fcp.g4 by ANTLR 4.10.1
-package common;
+package common.parser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;

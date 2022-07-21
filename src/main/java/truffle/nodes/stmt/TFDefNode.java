@@ -9,7 +9,7 @@ import truffle.nodes.TFNode;
 
 @NodeChild("valueNode")
 @NodeField(name = "slot", type = int.class)
-public abstract class TFDefNode extends TFNode { //TODO how dsl generate this ?
+public abstract class TFDefNode extends TFNode {
     protected abstract int getSlot();
 
     @Specialization(guards = "isLongOrIllegal(frame)")
@@ -30,7 +30,7 @@ public abstract class TFDefNode extends TFNode { //TODO how dsl generate this ?
 
     @Specialization(replaces = {"writeLong", "writeBoolean"})
     protected Object writeObject(VirtualFrame frame, Object value) {
-        //System.out.println("write as Object: " + frame.getFrameDescriptor().getSlotName(getSlot()));
+        System.out.println("write as Object: " + frame.getFrameDescriptor().getSlotName(getSlot()));
 
         frame.getFrameDescriptor().setSlotKind(getSlot(), FrameSlotKind.Object);
         frame.setObject(getSlot(), value);

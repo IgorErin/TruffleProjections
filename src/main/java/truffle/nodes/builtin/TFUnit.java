@@ -6,6 +6,8 @@ import truffle.nodes.TFNode;
 public class TFUnit extends TFNode {
     @Override
     public Object executeGeneric(VirtualFrame frame) {
-        return null;
+        System.out.println("Warning: empty list!");
+
+        return 0;
     }
 }

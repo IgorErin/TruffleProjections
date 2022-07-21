@@ -16,7 +16,7 @@ public class EvalTest {
         env = new Environment(null);
     }
 
-    @Test
+    /*@Test
     public void defTest() {
         Node defNode = fcpParser.getAstFromFile("src/test/java/defTest.fcp").get(0);
 
@@ -72,5 +72,5 @@ public class EvalTest {
         nodes.get(0).eval(env);
 
         Assertions.assertEquals( true, nodes.get(1).eval(env));
-    }
+    }*/
 }

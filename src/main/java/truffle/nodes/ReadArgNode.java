@@ -16,7 +16,7 @@ public class ReadArgNode extends TFNode {
         try {
             args = ((ArgArray) frame.getArguments()[1]).array();
         } catch (Exception e) {
-            throw new ClassCastException("Cannot cast to ArgArray in readArgNode execution");
+            throw new ClassCastException("Cannot cast to ArgArray in readArgNode: " + e.getMessage());
         }
 
         if (index < args.length) {

@@ -7,7 +7,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import truffle.frame.FrameStack;
 import truffle.nodes.TFNode;
 
-
 @NodeField(name = "slot", type = int.class)
 public abstract class TFVarNode extends TFNode {
     protected abstract int getSlot();
@@ -36,17 +35,15 @@ public abstract class TFVarNode extends TFNode {
             CompilerDirectives.transferToInterpreter();
 
             value = findScopedVar(frame);
-
-            return value;
         } else if (!frame.isObject(getSlot())) {
             System.out.println("reading Object as value: " + getName(frame));
-            CompilerDirectives.transferToInterpreter();
-            value  = frame.getValue(getSlot());
-            frame.setObject(getSlot(), value);
 
-            return value;
+            CompilerDirectives.transferToInterpreter();
+
+            value = frame.getValue(getSlot());
+            frame.setObject(getSlot(), value);
         } else {
-            //System.out.println("reading Object: " + getName(frame));
+            System.out.println("reading Object: " + getName(frame));
 
             value = frame.getObject(getSlot());
         }
@@ -59,9 +56,13 @@ public abstract class TFVarNode extends TFNode {
     }
 
     private Object findScopedVar(VirtualFrame frame) {
-        FrameStack frameStack = (FrameStack) frame.getArguments()[0];
+        try {
+            FrameStack frameStack = (FrameStack) frame.getArguments()[0];
 
-        return frameStack.find(getSlot());
+            return frameStack.find(getSlot());
+        } catch (Exception e) {
+            throw new RuntimeException("Find in scope excep: " + e.getMessage());
+        }
     }
 
     protected Object getName(VirtualFrame frame) {

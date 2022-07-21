@@ -4,18 +4,18 @@ import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.nodes.RootNode;
-import org.antlr.runtime.CharStream;
 import simple.SimpleFcpParser;
 import simple.nodes.Node;
 import truffle.frame.TFFrame;
 import truffle.nodes.TFNode;
 import truffle.nodes.TFRootNode;
+import truffle.nodes.builtin.Builtin;
 import truffle.parser.LexicalScope;
 
 import java.io.Reader;
 import java.util.List;
 
-@TruffleLanguage.Registration(id = "TF", name = "TF")
+@TruffleLanguage.Registration(id = "tf", name = "TF")
 public class TFLang extends TruffleLanguage<Void> {
     private final  FrameDescriptor.Builder newBuilder = FrameDescriptor.newBuilder();
     private final LexicalScope newScope = new LexicalScope(null);
@@ -23,31 +23,42 @@ public class TFLang extends TruffleLanguage<Void> {
     @Override
     protected CallTarget parse(ParsingRequest request) throws Exception {
         Reader fileName = request.getSource().getReader();
-        System.out.println(fileName);
 
         SimpleFcpParser newParser = new SimpleFcpParser();
         List<Node> nodeList = newParser.getAstFromReader(fileName);
 
         TFFrame.setBuiltins(newBuilder, newScope);
+        //System.out.println(newBuilder.build());
 
         TFNode[] tfNodes = getTFNodes(nodeList);
+        tfNodes = addBuiltins(tfNodes);
 
         RootNode rootNode = new TFRootNode(tfNodes, newBuilder.build());
-        //DirectCallNode directCall = Truffle.getRuntime().createDirectCallNode(rootNode.getCallTarget());
 
-        //Frame frame = TFFrame.getTopFrame(newBuilder.build(), newScope);
-
-        return rootNode.getCallTarget(); //directCall.call(new FrameStack(frame.materialize(), null), new ArgArray(new TFNode[]{}));TODO()
+        return rootNode.getCallTarget();
     }
 
     private TFNode[] getTFNodes(List<Node> nodes) {
-        TFNode[] tfNodes = new TFNode[nodes.size()];
+        TFNode[] tFNodes = new TFNode[nodes.size()];
 
         for (int index = 0; index < nodes.size(); index++) {
-            tfNodes[index] = nodes.get(index).convert(newBuilder, newScope);
+            tFNodes[index] = nodes.get(index).convert(newBuilder, newScope);
         }
 
-        return tfNodes;
+        return tFNodes;
+    }
+
+    private TFNode[] addBuiltins(TFNode[] nodes) {
+        TFNode[] tFNodes = new TFNode[nodes.length + Builtin.count];
+        TFNode[] builtins = Builtin.getBuiltinNodes(newBuilder.build(), newScope);
+
+        if (Builtin.count >= 0)
+            System.arraycopy(builtins, 0, tFNodes, 0, Builtin.count);
+
+        if (tFNodes.length - Builtin.count >= 0)
+            System.arraycopy(nodes, 0, tFNodes, Builtin.count, nodes.length);
+
+        return tFNodes;
     }
 
     @Override

@@ -16,6 +16,6 @@ public class PrintNode extends LocalFunNode {
             throw new RuntimeException("inside PrintNode, " + e.getMessage());
         }
 
-        return null;
+        return 0;
     }
 }

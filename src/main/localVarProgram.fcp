@@ -1,4 +1,3 @@
-
 (define fibFun (lambda (first second counter fun) (if (= counter 0) (+ second) (fun second (+ first second) (+ counter (- 1)) fun))))
 
 (define first (now))

@@ -8,9 +8,9 @@ import simple.nodes.exps.BooleanNode;
 import simple.nodes.exps.IntNode;
 import simple.nodes.exps.VarNode;
 import simple.nodes.stmts.Statement;
-import common.fcpBaseListener;
-import common.fcpLexer;
-import common.fcpParser;
+import common.parser.fcpBaseListener;
+import common.parser.fcpLexer;
+import common.parser.fcpParser;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -94,7 +94,7 @@ public class SimpleFcpParser extends fcpBaseListener {
 
             return parse(input);
         } catch (Exception e) {
-            throw  new RuntimeException("Parse exception: " + e.getMessage());
+            throw new RuntimeException("Parse exception: " + e.getMessage());
         }
     }
 
