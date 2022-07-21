@@ -5,7 +5,7 @@ import simple.Environment;
 import simple.nodes.Node;
 import simple.types.Function;
 import truffle.nodes.TFNode;
-import truffle.nodes.builtin.TFUnit;
+import truffle.builtin.TFUnit;
 import truffle.nodes.exps.TFInvokeNode;
 import truffle.parser.LexicalScope;
 

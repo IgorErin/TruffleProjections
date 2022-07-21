@@ -13,14 +13,14 @@ public abstract class TFVarNode extends TFNode {
 
     @Specialization(guards = "frame.isLong(getSlot())")
     protected long readLong(VirtualFrame frame) {
-        System.out.println("reading Long: " + getName(frame));
+        //System.out.println("reading Long: " + getName(frame));
 
         return frame.getLong(getSlot());
     }
 
     @Specialization(guards = "frame.isBoolean(getSlot())")
     protected boolean readBoolean(VirtualFrame frame) {
-        System.out.println("reading Boolean: " + getName(frame));
+        //System.out.println("reading Boolean: " + getName(frame));
 
         return frame.getBoolean(getSlot());
     }
@@ -30,20 +30,20 @@ public abstract class TFVarNode extends TFNode {
         Object value;
 
         if (frame.getValue(getSlot()) == frame.getFrameDescriptor().getDefaultValue()) {
-            System.out.println("reading Obj with stack: " + getName(frame));
+            //System.out.println("reading Obj with stack: " + getName(frame));
 
             CompilerDirectives.transferToInterpreter();
 
             value = findScopedVar(frame);
         } else if (!frame.isObject(getSlot())) {
-            System.out.println("reading Object as value: " + getName(frame));
+            //System.out.println("reading Object as value: " + getName(frame));
 
             CompilerDirectives.transferToInterpreter();
 
             value = frame.getValue(getSlot());
             frame.setObject(getSlot(), value);
         } else {
-            System.out.println("reading Object: " + getName(frame));
+            //System.out.println("reading Object: " + getName(frame));
 
             value = frame.getObject(getSlot());
         }

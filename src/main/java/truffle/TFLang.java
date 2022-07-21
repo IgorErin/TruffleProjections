@@ -9,7 +9,7 @@ import simple.nodes.Node;
 import truffle.frame.TFFrame;
 import truffle.nodes.TFNode;
 import truffle.nodes.TFRootNode;
-import truffle.nodes.builtin.Builtin;
+import truffle.builtin.Builtin;
 import truffle.parser.LexicalScope;
 
 import java.io.Reader;

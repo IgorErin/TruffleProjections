@@ -1,9 +1,9 @@
-package truffle.nodes.builtin.log;
+package truffle.builtin.log;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
-import truffle.nodes.builtin.LocalFunNode;
+import truffle.builtin.LocalFunNode;
 
-public class GNode extends LocalFunNode {
+public class GOENode extends LocalFunNode {
     @Override
     public Object executeGeneric(VirtualFrame frame) {
         Object[] args = getArgs(frame);
@@ -15,7 +15,7 @@ public class GNode extends LocalFunNode {
             long first = (long) args[0];
             long second = (long) args[1];
 
-            return first > second;
+            return first >= second;
         } catch (Exception e) {
             throw new RuntimeException("GNode exception " + e.getMessage());
         }

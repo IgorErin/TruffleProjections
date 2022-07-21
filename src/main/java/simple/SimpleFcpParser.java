@@ -1,5 +1,6 @@
 package simple;
 
+import org.antlr.runtime.CharStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -99,6 +100,6 @@ public class SimpleFcpParser extends fcpBaseListener {
     }
 
     public List<Node> getAstFromReader(Reader reader) throws IOException {
-        return parse(new ANTLRInputStream(reader));
+        return parse(CharStreams.fromReader(reader));
     }
 }

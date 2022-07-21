@@ -1,12 +1,12 @@
-package truffle.nodes.builtin;
+package truffle.builtin;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
+import truffle.builtin.arithmetic.AddNode;
+import truffle.builtin.arithmetic.MinusNode;
+import truffle.builtin.arithmetic.MulNode;
+import truffle.builtin.log.*;
 import truffle.nodes.TFNode;
 import truffle.nodes.TFRootNode;
-import truffle.nodes.builtin.arithmetic.AddNode;
-import truffle.nodes.builtin.arithmetic.MinusNode;
-import truffle.nodes.builtin.arithmetic.MulNode;
-import truffle.nodes.builtin.log.*;
 import truffle.nodes.stmt.TFDefNode;
 import truffle.nodes.stmt.TFDefNodeGen;
 import truffle.nodes.stmt.TFLambdaNodeGen;

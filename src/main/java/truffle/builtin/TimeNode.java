@@ -1,4 +1,4 @@
-package truffle.nodes.builtin;
+package truffle.builtin;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import truffle.nodes.TFNode;

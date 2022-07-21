@@ -30,7 +30,7 @@ public abstract class TFDefNode extends TFNode {
 
     @Specialization(replaces = {"writeLong", "writeBoolean"})
     protected Object writeObject(VirtualFrame frame, Object value) {
-        System.out.println("write as Object: " + frame.getFrameDescriptor().getSlotName(getSlot()));
+        //System.out.println("write as Object: " + frame.getFrameDescriptor().getSlotName(getSlot()));
 
         frame.getFrameDescriptor().setSlotKind(getSlot(), FrameSlotKind.Object);
         frame.setObject(getSlot(), value);

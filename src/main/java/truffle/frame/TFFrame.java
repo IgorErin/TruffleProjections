@@ -2,9 +2,7 @@ package truffle.frame;
 
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.*;
-import truffle.TFLang;
-import truffle.nodes.TFNode;
-import truffle.nodes.builtin.Builtin;
+import truffle.builtin.Builtin;
 import truffle.parser.LexicalScope;
 
 public class TFFrame {

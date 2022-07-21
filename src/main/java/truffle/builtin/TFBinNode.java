@@ -1,4 +1,4 @@
-package truffle.nodes.builtin;
+package truffle.builtin;
 
 import truffle.nodes.TFNode;
 

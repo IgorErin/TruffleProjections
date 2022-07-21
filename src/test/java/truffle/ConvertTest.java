@@ -1,31 +1,72 @@
 package truffle;
 
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Value;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ConvertTest {
-    /*@ParameterizedTest
-    @MethodSource("provideStringsForIsBlank")
-    void isBlank_ShouldReturnTrueForNullOrBlankStrings(String fileName, Object expected) {
-        Object value = TruffleMain.execute(fileName);
+    Context context;
 
-        Assertions.assertEquals(expected, value);
+    @BeforeEach
+    public void setUpContext() {
+        context = Context.create();
     }
 
-    private static Stream<Arguments> provideStringsForIsBlank() {
-        return Stream.of(
-                Arguments.of("src/test/java/defTest.fcp", (long) 4),
-                Arguments.of("src/test/java/ifTest.fcp", false),
-                Arguments.of("src/test/java/fibTest.fcp", (long) 10946),
-                Arguments.of("src/test/java/plusTest.fcp", (long) 7),
-                Arguments.of("src/test/java/minusTest.fcp", (long) -7),
-                Arguments.of("src/test/java/falseBooleanDefTest.fcp", false),
-                Arguments.of("src/test/java/trueBooleanDefTest.fcp", true),
-                Arguments.of("src/test/java/trueBooleanDefTest.fcp", true)
-        );
-    }*/
+    @Test
+    public void ifTest() {
+        Value value = context.eval("tf", "(define value #f) (if value #t #f)");
+
+        Assertions.assertFalse(value.asBoolean());
+    }
+
+    @Test
+    public void fibTest() {
+        Value value = context.eval("tf", Programs.fibRecursive);
+
+        Assertions.assertEquals((long) 10946, value.asLong());
+    }
+
+    @Test
+    public void ifArifTest() {
+        Value value = context.eval("tf", "(if (< 4 3) #t #f)");
+
+        Assertions.assertFalse(value.asBoolean());
+    }
+
+    @Test
+    public void minusTest() {
+        Value value = context.eval("tf", "(- 3 4)");
+
+        Assertions.assertEquals((long) -7, value.asLong());
+    }
+
+    @Test
+    public void mulTest() {
+        Value value = context.eval("tf", "(* 4 3)");
+
+        Assertions.assertEquals((long) 12, value.asLong());
+    }
+
+    @Test
+    public void plusTest() {
+        Value value = context.eval("tf", "(+ 4 3)");
+
+        Assertions.assertEquals((long) 7, value.asLong());
+    }
+
+    @Test
+    public void trueBooleanDefTest() {
+        Value value = context.eval("tf", "(define val #t) (if val #t #f)");
+
+        Assertions.assertTrue(value.asBoolean());
+    }
+
+    @Test
+    public void intVarDefTest() {
+        Value value = context.eval("tf", "(define name 4) (+ name)");
+
+        Assertions.assertEquals((long) 4, value.asLong());
+    }
 }

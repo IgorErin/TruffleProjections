@@ -1,9 +1,9 @@
-package truffle.nodes.builtin.arithmetic;
+package truffle.builtin.arithmetic;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
-import truffle.nodes.builtin.LocalFunNode;
+import truffle.builtin.LocalFunNode;
 
-public class AddNode extends LocalFunNode {
+public class MinusNode extends LocalFunNode {
     @Override
     public Object executeGeneric(VirtualFrame frame) {
         Object[] args = getArgs(frame);
@@ -11,10 +11,10 @@ public class AddNode extends LocalFunNode {
 
         try {
             for (Object arg : args) {
-                sum = Math.addExact(sum, (long) arg);
+                sum = Math.subtractExact(sum, (long) arg);
             }
         } catch (Exception e) {
-            throw new RuntimeException("AddNode exception " + e.getMessage());
+            throw new RuntimeException("inside MinusNode, " + e.getMessage());
         }
 
         return sum;

@@ -1,32 +1,13 @@
 package truffle;
 
 import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Value;
 
 public class TruffleMain {
     static public void main(String[] args) {
         try {
             Context context = Context.create("tf");
 
-            context.eval("tf", "(define iter (lambda (counter first second) (if (= counter 0) (+ second) (iter (+ counter (- 1)) second (+ first second)))))\n" +
-                    "\n" +
-                    "(define fib (lambda (x) (iter x 0 1)))\n" +
-                    "\n" +
-                    "(fib 20)\n" +
-                    "(fib 20)\n" +
-                    "(fib 20)\n" +
-                    "(fib 20)\n" +
-                    "(fib 20)\n" +
-                    "(fib 20)\n" +
-                    "(fib 20)\n" +
-                    "\n" +
-                    "(define first (now))\n" +
-                    "\n" +
-                    "(fib 20)\n" +
-                    "\n" +
-                    "(define second (now))\n" +
-                    "\n" +
-                    "(println (+ second (- first)))");
+            context.eval("tf", "(println 4)");
 
         } catch (Exception e) {
             System.out.println("Execute exception: " + e.getMessage());
